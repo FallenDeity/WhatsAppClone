@@ -24,7 +24,7 @@ model User {
 
   conversationIds String[] @db.ObjectId
   conversations Conversation[] @relation(fields: [conversationIds], references: [id])
-  
+
   seenMessageIds String[] @db.ObjectId
   seenMessages Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
 
@@ -58,7 +58,7 @@ model Conversation {
   lastMessageAt DateTime @default(now())
   name String?
   isGroup Boolean?
-  
+
   messagesIds String[] @db.ObjectId
   messages Message[]
 
@@ -78,7 +78,7 @@ model Message {
 
   conversationId String @db.ObjectId
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
+
   senderId String @db.ObjectId
   sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }

@@ -36,7 +36,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 
 export async function GET(request: Request): Promise<NextResponse> {
 	try {
-		console.log(request.url);
 		const { searchParams } = new URL(request.url);
 		const email = searchParams.get("email");
 		if (!email) {

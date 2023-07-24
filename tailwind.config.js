@@ -12,6 +12,9 @@ module.exports = {
 			},
 		},
 		extend: {
+			backgroundImage: {
+				"chat-background": "url('/chat-bg.png')",
+			},
 			colors: {
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
@@ -52,6 +55,9 @@ module.exports = {
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
 			},
+			gridTemplateColumns: {
+				main: "1fr 2.4fr",
+			},
 			keyframes: {
 				"accordion-down": {
 					from: { height: 0 },
@@ -68,5 +74,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), require("prettier-plugin-tailwindcss")],
+	plugins: [require("tailwindcss-animate"), require("prettier-plugin-tailwindcss"), require("tailwind-scrollbar")],
 };

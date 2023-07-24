@@ -7,10 +7,14 @@ import React from "react";
 import { BiDotsVerticalRounded, BiSolidMessageDetail } from "react-icons/bi";
 import { BsFillMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { MdGroups2 } from "react-icons/md";
+import { useRecoilState } from "recoil";
 
 import { UserSession } from "@/lib/model";
 
+import { sideBarState } from "../atoms/sideBar";
+
 export default function ChatListHeader(): React.JSX.Element {
+	const setPageType = useRecoilState(sideBarState)[1];
 	const { systemTheme, theme, setTheme } = useTheme();
 	const currentTheme = theme === "system" ? systemTheme : theme;
 	const isDark = currentTheme === "dark";
@@ -39,7 +43,7 @@ export default function ChatListHeader(): React.JSX.Element {
 					/>
 				)}
 				<MdGroups2 className="h-6 w-6 cursor-pointer" />
-				<BiSolidMessageDetail className="h-6 w-6 cursor-pointer" />
+				<BiSolidMessageDetail className="h-6 w-6 cursor-pointer" onClick={(): void => setPageType("contact")} />
 				<BiDotsVerticalRounded className="h-6 w-6 cursor-pointer" />
 			</div>
 		</div>

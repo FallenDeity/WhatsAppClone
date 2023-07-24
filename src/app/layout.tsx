@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import React from "react";
+import { RecoilRoot } from "recoil";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
 		<html lang="en">
 			<body className={`${inter.className}`}>
 				<SessionProvider>
-					<ThemeProvider attribute="class">{children}</ThemeProvider>
+					<RecoilRoot>
+						<ThemeProvider attribute="class">{children}</ThemeProvider>
+					</RecoilRoot>
 				</SessionProvider>
 			</body>
 		</html>

@@ -76,3 +76,40 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@layer components {
+	.my-react-select-container .my-react-select__control {
+		@apply border-2 border-input bg-background hover:border-input focus:border-input;
+	}
+
+	.my-react-select-container .my-react-select__control--is-focused {
+		@apply border-2 border-input shadow-none ring-2 ring-ring ring-offset-2 hover:border-input focus:border-input focus:ring-ring focus:ring-offset-2;
+	}
+
+	.my-react-select-container .my-react-select__menu {
+		@apply border-2 border-input bg-popover;
+	}
+
+	.my-react-select-container .my-react-select__option {
+		@apply cursor-pointer bg-popover text-secondary-foreground transition-all duration-300 ease-in-out hover:bg-muted;
+	}
+
+	.my-react-select-container .my-react-select__indicator-separator {
+		@apply bg-muted;
+	}
+
+	.my-react-select-container .my-react-select__multi-value,
+	.my-react-select-container .my-react-select__multi-value__label {
+		@apply bg-accent text-muted-foreground;
+	}
+
+	.my-react-select-container .my-react-select__multi-value .my-react-select__multi-value__remove {
+		@apply bg-accent transition-all duration-300 ease-in-out hover:bg-popover hover:text-red-500 hover:opacity-50;
+	}
+
+	.my-react-select-container .my-react-select__input-container,
+	.my-react-select-container .my-react-select__placeholder,
+	.my-react-select-container .my-react-select__single-value {
+		@apply text-neutral-600 dark:text-neutral-200;
+	}
+}

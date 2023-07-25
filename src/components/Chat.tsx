@@ -49,7 +49,7 @@ export default function Chat(): React.JSX.Element {
 	}, [session, router]);
 	return (
 		<div className="relative z-0 grid h-screen max-h-screen w-screen max-w-full grid-cols-main overflow-hidden bg-gradient-to-b from-[#f0f2f5] to-[#efeae2] dark:from-[#222e35] dark:to-[#0b141a] lg:p-5">
-			{loading ? (
+			{loading || !session ? (
 				<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
 					<Lottie animationData={animationData} loop={true} height={500} width={500} />
 				</div>

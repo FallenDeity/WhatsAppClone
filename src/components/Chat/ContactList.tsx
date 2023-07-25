@@ -5,6 +5,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
+import Avatar from "react-avatar";
 import { BiArrowBack } from "react-icons/bi";
 import { useRecoilState } from "recoil";
 
@@ -81,13 +82,21 @@ export default function ContactList(): React.JSX.Element {
 								key={user.id}
 								className="flex h-20 w-full cursor-pointer items-center justify-between px-4 transition-all duration-300 ease-in-out hover:bg-[#f0f2f5] dark:hover:bg-[#222e35]">
 								<div className="flex h-full w-full items-center space-x-4">
-									<Image
-										src={user.image || "/user.png"}
-										alt="Profile"
-										width={40}
-										height={40}
-										className="h-12 w-12 cursor-pointer rounded-full object-contain"
-									/>
+									{user.image ? (
+										<Image
+											src={user.image || "/user.png"}
+											alt="Profile"
+											width={40}
+											height={40}
+											className="h-15 w-15 cursor-pointer rounded-full object-contain"
+										/>
+									) : (
+										<Avatar
+											name={user.name ?? ""}
+											size="40"
+											className="h-12 w-12 cursor-pointer rounded-full object-contain p-0"
+										/>
+									)}
 									<div className="flex h-full w-full flex-col justify-center border-y">
 										<span className="text-md font-semibold text-[#1d2129] dark:text-[#e4e6eb]">
 											{user.name}

@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const currentUser = await getCurrentUser();
 		const body = await request.json();
-		const { userId, isGroup, members, name } = body;
+		const { userId, isGroup, members, name, logo } = body;
 		if (!currentUser?.id || !currentUser.email) {
 			return new NextResponse("Unauthorized", { status: 400 });
 		}
@@ -33,6 +33,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 							},
 						],
 					},
+					logo,
 				},
 				include: {
 					users: true,
@@ -56,9 +57,8 @@ export async function POST(request: Request): Promise<NextResponse> {
 				],
 			},
 		});
-		const singleConversation = existingConversations[0];
-		if (singleConversation) {
-			return NextResponse.json(singleConversation);
+		if (existingConversations.length > 0) {
+			return NextResponse.json(existingConversations[0]);
 		}
 		const newConversation = await prisma.conversation.create({
 			data: {

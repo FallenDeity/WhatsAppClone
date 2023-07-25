@@ -6,6 +6,7 @@
 import { format } from "date-fns";
 import Image from "next/image";
 import React from "react";
+import Avatar from "react-avatar";
 import { useRecoilState } from "recoil";
 
 import { FullConversationType } from "@/lib/types";
@@ -39,7 +40,6 @@ export default function ChatListItem({
 
 		return seenArray.filter((user) => user.email === email).length !== 0;
 	}, [email, lastMessage]);
-
 	const lastMessageText = React.useMemo(() => {
 		if (lastMessage?.image) {
 			return "Sent an image";
@@ -51,6 +51,15 @@ export default function ChatListItem({
 
 		return "Started a conversation";
 	}, [lastMessage]);
+	const unseenMessages = React.useMemo(() => {
+		if (!conversation.messages) {
+			return 0;
+		}
+		const unseen = conversation.messages.filter(
+			(message) => !message.seen?.filter((user) => user.email === email).length
+		);
+		return unseen.length;
+	}, [conversation.messages, email]);
 	return (
 		<div
 			onClick={(): void => {
@@ -62,14 +71,20 @@ export default function ChatListItem({
 			}`}>
 			<div className="flex h-full w-full items-center space-x-4">
 				{conversation.isGroup ? (
-					<AvatarGroup users={conversation.users} />
-				) : (
+					<AvatarGroup conversation={conversation} users={conversation.users} />
+				) : conversation.users.filter((user) => user.email !== email)[0]?.image ? (
 					<Image
 						src={conversation.users.filter((user) => user.email !== email)[0]?.image || "/user.png"}
 						alt="Profile"
 						width={40}
 						height={40}
-						className="h-12 w-12 cursor-pointer rounded-full object-contain"
+						className="h-15 w-15 cursor-pointer rounded-full object-contain"
+					/>
+				) : (
+					<Avatar
+						name={conversation.users.filter((user) => user.email !== email)[0]?.name ?? ""}
+						size="40"
+						className="h-12 w-12 cursor-pointer rounded-full object-contain p-0"
 					/>
 				)}
 				<div className="flex h-full w-full flex-row justify-between border-y">
@@ -77,19 +92,26 @@ export default function ChatListItem({
 						<span className="text-md font-semibold text-[#1d2129] dark:text-[#e4e6eb]">
 							{conversation.name || conversation.users.filter((user) => user.email !== email)[0]?.name}
 							<span
-								className={`line-clamp-1 text-xs font-normal text-[#54656f] dark:text-[#aebac1] ${
+								className={`mt-1 line-clamp-1 text-xs ${
 									// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-									hasSeen && "text-opacity-50"
+									hasSeen
+										? "font-normal text-[#54656f] dark:text-[#aebac1]"
+										: "font-semibold text-black dark:text-white"
 								}`}>
 								{lastMessageText}
 							</span>
 						</span>
 					</div>
 					{lastMessage?.createdAt && (
-						<div className="flex flex-col justify-center">
+						<div className="flex flex-col items-end justify-center space-y-2">
 							<span className="text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
 								{format(new Date(lastMessage?.createdAt), "p")}
 							</span>
+							{unseenMessages > 0 && (
+								<span className="flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-green-600 text-[8px] text-white">
+									{unseenMessages}
+								</span>
+							)}
 						</div>
 					)}
 				</div>

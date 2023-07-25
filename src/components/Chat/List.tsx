@@ -19,7 +19,6 @@ export default function List(): React.JSX.Element {
 		}
 		void getData();
 	}, []);
-	console.log(conversations);
 	return (
 		<div className="flex h-[90vh] flex-grow flex-col overflow-y-auto border-t border-[#e9edef] pb-24 scrollbar-thin scrollbar-thumb-gray-300 dark:border-[#313d45] dark:scrollbar-thumb-gray-700 lg:h-[80vh]">
 			{session &&

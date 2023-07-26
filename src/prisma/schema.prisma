@@ -72,6 +72,7 @@ model Message {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   body String?
   image String?
+  audio String?
   type String?
   createdAt DateTime @default(now())
 

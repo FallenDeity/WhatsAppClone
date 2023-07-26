@@ -7,8 +7,13 @@ import { pusherServer } from "@/lib/pusher";
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const currentUser = await getCurrentUser();
-		const body = (await request.json()) as { message: string; image: string; conversationId: string };
-		const { message, image, conversationId } = body;
+		const body = (await request.json()) as {
+			message: string;
+			image: string;
+			conversationId: string;
+			audio: string;
+		};
+		const { message, image, conversationId, audio } = body;
 		if (!currentUser?.id || !currentUser.email) {
 			return new NextResponse("Unauthorized", { status: 401 });
 		}
@@ -20,6 +25,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 			data: {
 				body: message,
 				image: image,
+				audio: audio,
 				conversation: {
 					connect: { id: conversationId },
 				},
@@ -49,6 +55,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 				users: true,
 				messages: {
 					include: {
+						sender: true,
 						seen: true,
 					},
 				},

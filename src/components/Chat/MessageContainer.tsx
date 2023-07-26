@@ -11,6 +11,8 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs";
 
 import { FullMessageType } from "@/lib/types";
 
+import VoiceMessage from "./VoiceMessage";
+
 export default function MessageContainer({
 	users,
 	id,
@@ -62,7 +64,7 @@ export default function MessageContainer({
 								className={`flex flex-col-reverse ${
 									message.sender.email === email ? "items-end" : "items-start"
 								}`}>
-								{message.image ? (
+								{message.image && (
 									<div
 										className={`rounded-lg p-1 ${
 											message.sender.email === email
@@ -93,7 +95,9 @@ export default function MessageContainer({
 											</div>
 										</div>
 									</div>
-								) : (
+								)}
+								{message.audio && <VoiceMessage users={users} email={email} message={message} />}
+								{message.body && (
 									<div
 										className={`flex max-w-[45%] items-center gap-2 rounded-md px-2 py-[3px] text-sm text-[#111b21] dark:text-[#daedef] ${
 											message.sender.email === email

@@ -112,6 +112,7 @@
 		"tailwind-scrollbar": "^3.0.4",
 		"tailwind-scrollbar-hide": "^1.1.7",
 		"tailwindcss-animate": "^1.0.6",
+		"wavesurfer.js": "^7.0.6",
 		"winston": "^3.9.0",
 		"yup": "^1.2.0",
 		"zustand": "^4.3.9"

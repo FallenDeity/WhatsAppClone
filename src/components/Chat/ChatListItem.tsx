@@ -41,12 +41,17 @@ export default function ChatListItem({
 		return seenArray.filter((user) => user.email === email).length !== 0;
 	}, [email, lastMessage]);
 	const lastMessageText = React.useMemo(() => {
+		const lastUser = String(lastMessage?.sender?.email === email ? "You" : lastMessage?.sender?.name);
 		if (lastMessage?.image) {
-			return "Sent an image";
+			return `${lastUser} sent an image`;
+		}
+
+		if (lastMessage?.audio) {
+			return `${lastUser} sent a voice message`;
 		}
 
 		if (lastMessage?.body) {
-			return lastMessage?.body;
+			return `${lastUser}: ${lastMessage?.body}`;
 		}
 
 		return "Started a conversation";

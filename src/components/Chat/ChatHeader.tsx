@@ -74,6 +74,7 @@ export default function ChatHeader({
 				setLoading(false);
 			});
 	};
+	console.log(otherUser);
 	return (
 		<div className="z-20 flex h-16 w-full items-center justify-between rounded-tr-lg bg-[#f0f2f5] px-4 py-4 dark:bg-[#222e35]">
 			<div className="flex items-center space-x-4">
@@ -104,7 +105,9 @@ export default function ChatHeader({
 							: members.includes(otherUser?.email ?? "")
 							? "Online"
 							: // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-							  `Last seen ${format(otherUser?.lastSeen ?? new Date(), "p")}`}
+							otherUser?.lastSeen
+							? `Last seen ${format(otherUser.lastSeen, "p")}`
+							: "Offline"}
 					</span>
 				</div>
 			</div>

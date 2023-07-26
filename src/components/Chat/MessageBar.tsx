@@ -9,6 +9,9 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { FaMicrophone } from "react-icons/fa6";
 import { ImAttachment } from "react-icons/im";
 import { MdSend } from "react-icons/md";
+import { ClipLoader } from "react-spinners";
+
+import AudioBar from "./AudioBar";
 
 export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 	const { resolvedTheme } = useTheme();
@@ -16,6 +19,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [text, setText] = React.useState<string>("");
 	const [showEmoji, setShowEmoji] = React.useState<boolean>(false);
+	const [showAudioRecorder, setShowAudioRecorder] = React.useState<boolean>(false);
 	const handleSend = (e: React.FormEvent<HTMLFormElement>): void => {
 		e.preventDefault();
 		if (loading) return;
@@ -53,50 +57,65 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 	};
 	return (
 		<div className="relative flex w-full items-center gap-6 border-b-4 border-b-[#25d366] bg-[#f0f2f5] px-4 py-2 dark:border-b-[#00a884] dark:bg-[#222e35]">
-			<div className="flex gap-6 text-[#54656f] dark:text-[#aebac1]">
-				<BsEmojiSmile
-					title="Emoji"
-					id="emoji-open"
-					onClick={handleEmojiMenu}
-					className="h-5 w-5 cursor-pointer"
-				/>
-				<CldUploadButton
-					onUpload={handleUpload}
-					uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? ""}
-					options={{ maxFiles: 1, styles: {} }}>
-					<ImAttachment title="Attach File" className="h-5 w-5 cursor-pointer" />
-				</CldUploadButton>
-				{showEmoji && (
-					<div className="absolute bottom-20 left-5 z-40">
-						<EmojiPicker
-							onEmojiClick={handleEmojiClick}
-							lazyLoadEmojis={true}
-							theme={resolvedTheme === "dark" ? Theme.DARK : Theme.LIGHT}
+			{!showAudioRecorder && (
+				<>
+					<div className="flex gap-6 text-[#54656f] dark:text-[#aebac1]">
+						<BsEmojiSmile
+							title="Emoji"
+							id="emoji-open"
+							onClick={handleEmojiMenu}
+							className="h-5 w-5 cursor-pointer"
 						/>
+						<CldUploadButton
+							onUpload={handleUpload}
+							uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? ""}
+							options={{ maxFiles: 1, styles: {} }}>
+							<ImAttachment title="Attach File" className="h-5 w-5 cursor-pointer" />
+						</CldUploadButton>
+						{showEmoji && (
+							<div className="absolute bottom-20 left-5 z-40">
+								<EmojiPicker
+									onEmojiClick={handleEmojiClick}
+									lazyLoadEmojis={true}
+									theme={resolvedTheme === "dark" ? Theme.DARK : Theme.LIGHT}
+								/>
+							</div>
+						)}
 					</div>
-				)}
-			</div>
-			<form onSubmit={handleSend} className="flex w-full items-center justify-center gap-6">
-				<div className="flex h-10 w-full items-center rounded-lg">
-					<input
-						disabled={loading}
-						onChange={(e): void => setText(e.target.value)}
-						ref={textRef}
-						value={text}
-						placeholder="Type a message"
-						className="flex h-10 w-full overflow-y-auto rounded-lg bg-white px-5 text-sm scrollbar-hide focus:outline-none dark:bg-[#313d45] dark:text-[#e4e6eb]"
-					/>
-				</div>
-				<div className="flex gap-6 text-[#54656f] dark:text-[#aebac1]">
-					<button
-						type="submit"
-						disabled={loading}
-						className="h-5 w-5 cursor-pointer disabled:animate-pulse disabled:cursor-not-allowed">
-						<MdSend className="h-full w-full" />
-					</button>
-					<FaMicrophone className="h-5 w-5 cursor-pointer" />
-				</div>
-			</form>
+					<form onSubmit={handleSend} className="mr-2 flex w-full items-center justify-center gap-6">
+						<div className="flex h-10 w-full items-center rounded-lg">
+							<input
+								disabled={loading}
+								onChange={(e): void => setText(e.target.value)}
+								ref={textRef}
+								value={text}
+								placeholder="Type a message"
+								className="flex h-10 w-full overflow-y-auto rounded-lg bg-white px-5 text-sm text-[#54656f] scrollbar-hide focus:outline-none dark:bg-[#313d45] dark:text-[#e4e6eb]"
+							/>
+						</div>
+						<div className="flex gap-6 text-[#54656f] dark:text-[#aebac1]">
+							{text.length > 0 || loading ? (
+								<button
+									type="submit"
+									disabled={loading}
+									className="h-5 w-5 cursor-pointer disabled:animate-pulse disabled:cursor-not-allowed">
+									{loading ? (
+										<ClipLoader color="#36d7b7" size={18} />
+									) : (
+										<MdSend className="h-full w-full" />
+									)}
+								</button>
+							) : (
+								<FaMicrophone
+									className="h-5 w-5 cursor-pointer"
+									onClick={(): void => setShowAudioRecorder(true)}
+								/>
+							)}
+						</div>
+					</form>
+				</>
+			)}
+			{showAudioRecorder && <AudioBar conversationId={id} hide={setShowAudioRecorder} />}
 		</div>
 	);
 }

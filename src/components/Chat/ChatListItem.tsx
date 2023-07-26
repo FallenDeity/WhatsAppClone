@@ -55,6 +55,9 @@ export default function ChatListItem({
 		if (!conversation.messages) {
 			return 0;
 		}
+		if (conversation.messages[conversation.messages.length - 1]?.seen?.length === conversation.users.length) {
+			return 0;
+		}
 		const unseen = conversation.messages.filter(
 			(message) => !message.seen?.filter((user) => user.email === email).length
 		);

@@ -40,6 +40,7 @@ const getConversationById = async (conversationId: string): Promise<FullConversa
 		});
 		return conversation;
 	} catch (error) {
+		console.log(error, "CONVERSATION_FETCH_ERROR");
 		return null;
 	}
 };

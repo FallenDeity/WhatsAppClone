@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import Avatar from "react-avatar";
 import { BiTrash } from "react-icons/bi";
@@ -32,6 +33,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useActiveList from "@/hooks/useActiveList";
 import { FullConversationType } from "@/lib/types";
 
 import { conversationState } from "../atoms/conversationState";
@@ -44,6 +46,8 @@ export default function ChatHeader({
 	conversation?: FullConversationType | null;
 	email: string;
 }): React.JSX.Element {
+	const { members } = useActiveList();
+	const router = useRouter();
 	const otherUser = React.useMemo(() => {
 		if (!conversation) {
 			return null;
@@ -63,6 +67,7 @@ export default function ChatHeader({
 				setConversationState("");
 				setModalOpen(false);
 				setLoading(false);
+				router.replace("/chat");
 			})
 			.finally(() => {
 				setModalOpen(false);
@@ -94,7 +99,12 @@ export default function ChatHeader({
 						{conversation?.name || otherUser?.name}
 					</span>
 					<span className="line-clamp-1 text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
-						{conversation?.isGroup ? conversation.users.map((user) => user.name).join(", ") : "Online"}
+						{conversation?.isGroup
+							? conversation.users.map((user) => user.name).join(", ")
+							: members.includes(otherUser?.email ?? "")
+							? "Online"
+							: // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+							  `Last seen ${format(otherUser?.lastSeen ?? new Date(), "p")}`}
 					</span>
 				</div>
 			</div>
@@ -136,12 +146,12 @@ export default function ChatHeader({
 								{!conversation?.isGroup && (
 									<span className="text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
 										{" "}
-										• Online
+										• {members.includes(otherUser?.email ?? "") ? "Online" : "Offline"}
 									</span>
 								)}
 							</span>
 							<span className="mt-2 text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
-								Joined {format(otherUser?.createdAt ?? new Date(), "MMMM yyyy")}
+								Joined {format(otherUser?.createdAt ?? new Date(), "dd MMMM yyyy")}
 							</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem

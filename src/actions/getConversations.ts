@@ -38,6 +38,7 @@ const getConversations = async (): Promise<FullConversationType[]> => {
 
 		return conversations;
 	} catch (error) {
+		console.log(error, "CONVERSATIONS_FETCH_ERROR");
 		return [];
 	}
 };

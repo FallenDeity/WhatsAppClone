@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/actions/getCurrentUser";
 import { prisma } from "@/lib/prisma";
+import { pusherServer } from "@/lib/pusher";
 
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
@@ -15,7 +16,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 			image: string;
 			about: string;
 		};
-		console.log(body, "BODY");
 		if (!currentUser?.id) {
 			return new NextResponse("Unauthorized", { status: 401 });
 		}
@@ -25,6 +25,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 			},
 			data: body,
 		});
+		await pusherServer.trigger(String(updatedUser.email), "user:update", updatedUser);
 		return NextResponse.json(updatedUser);
 	} catch (error) {
 		console.log(error, "ERROR_MESSAGES");

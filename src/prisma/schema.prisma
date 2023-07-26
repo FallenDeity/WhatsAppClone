@@ -21,6 +21,7 @@ model User {
   about           String? @default("Hey there! I am using WhatsApp Clone")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  lastSeen        DateTime? @default(now())
 
   conversationIds String[] @db.ObjectId
   conversations Conversation[] @relation(fields: [conversationIds], references: [id])

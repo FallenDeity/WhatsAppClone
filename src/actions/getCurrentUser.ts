@@ -29,6 +29,7 @@ const getCurrentUser = async (): Promise<User | null> => {
 
 		return currentUser;
 	} catch (error) {
+		console.log(error, "CURRENT_USER_FETCH_ERROR");
 		return null;
 	}
 };

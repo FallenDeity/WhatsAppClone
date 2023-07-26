@@ -1,8 +1,10 @@
 "use client";
 
+import { User } from "@prisma/client";
 import axios from "axios";
 import { format } from "date-fns";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import Avatar from "react-avatar";
 import { BsCheck2, BsCheck2All } from "react-icons/bs";
@@ -10,14 +12,17 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs";
 import { FullMessageType } from "@/lib/types";
 
 export default function MessageContainer({
+	users,
 	id,
 	messages,
 	email,
 }: {
+	users: User[];
 	id: string;
 	messages: FullMessageType[];
 	email: string;
 }): React.JSX.Element {
+	const [image, setImage] = React.useState<string | null>(null);
 	React.useEffect(() => {
 		void axios.post(`/api/conversations/${id}/seen`);
 	}, [messages]);
@@ -25,6 +30,30 @@ export default function MessageContainer({
 		<div className="relative flex h-full w-full flex-col-reverse overflow-y-auto scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-700">
 			<div className="z-1 fixed left-0 top-0 h-full w-full bg-chat-background bg-fixed opacity-50 dark:opacity-5" />
 			<div className="relative bottom-0 left-0 z-40 px-10 py-6">
+				{image && (
+					<div className="z-80 fixed left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/70">
+						<button
+							className="z-90 fixed right-8 top-6 text-5xl font-bold text-white"
+							onClick={(): void => setImage("")}>
+							&times;
+						</button>
+						<Image
+							src={image}
+							alt="image"
+							width={800}
+							height={600}
+							className="max-h-[600px] max-w-[800px] object-contain"
+						/>
+						<Link
+							href={image}
+							passHref
+							target="_blank"
+							rel="noopener noreferrer"
+							className="mt-1 text-neutral-500 transition-all duration-300 ease-in hover:text-blue-500">
+							open original
+						</Link>
+					</div>
+				)}
 				<div className="flex w-full">
 					<div className="flex w-full flex-col justify-end gap-2 overflow-auto">
 						{messages.map((message) => (
@@ -42,6 +71,9 @@ export default function MessageContainer({
 										}`}>
 										<div className="relative">
 											<Image
+												onClick={(): void => {
+													setImage(message.image);
+												}}
 												src={message.image}
 												alt={message.sender.name ?? ""}
 												width={200}
@@ -53,7 +85,7 @@ export default function MessageContainer({
 													{format(new Date(message.createdAt), "hh:mm aa")}
 												</span>
 												{message.sender.email === email &&
-													(message.seen.filter((user) => user.email !== email).length ? (
+													(message.seenIds.length === users.length ? (
 														<BsCheck2All className="text-blue-500" />
 													) : (
 														<BsCheck2 className="text-gray-500" />
@@ -74,7 +106,7 @@ export default function MessageContainer({
 												{format(new Date(message.createdAt), "hh:mm aa")}
 											</span>
 											{message.sender.email === email &&
-												(message.seen.filter((user) => user.email !== email).length ? (
+												(message.seenIds.length === users.length ? (
 													<BsCheck2All className="text-blue-500" />
 												) : (
 													<BsCheck2 className="text-gray-500" />

@@ -27,9 +27,9 @@ const getUsers = async (): Promise<User[]> => {
 				},
 			},
 		});
-
 		return users;
 	} catch (error) {
+		console.log(error, "USERS_FETCH_ERROR");
 		return [];
 	}
 };

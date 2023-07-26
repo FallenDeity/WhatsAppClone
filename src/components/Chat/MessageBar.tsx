@@ -62,7 +62,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 				/>
 				<CldUploadButton
 					onUpload={handleUpload}
-					uploadPreset={process.env.CLOUDINARY_UPLOAD_PRESET ?? ""}
+					uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? ""}
 					options={{ maxFiles: 1, styles: {} }}>
 					<ImAttachment title="Attach File" className="h-5 w-5 cursor-pointer" />
 				</CldUploadButton>
@@ -79,6 +79,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 			<form onSubmit={handleSend} className="flex w-full items-center justify-center gap-6">
 				<div className="flex h-10 w-full items-center rounded-lg">
 					<input
+						disabled={loading}
 						onChange={(e): void => setText(e.target.value)}
 						ref={textRef}
 						value={text}

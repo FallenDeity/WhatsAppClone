@@ -6,7 +6,8 @@ import { User } from "@prisma/client";
 import axios from "axios";
 import { EditIcon, LogOutIcon } from "lucide-react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import React from "react";
 import Avatar from "react-avatar";
@@ -32,6 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { UserSession } from "@/lib/model";
+import { pusherClient } from "@/lib/pusher";
 
 import { sideBarState } from "../atoms/sideBar";
 
@@ -45,6 +47,7 @@ interface Selected {
 }
 
 export default function ChatListHeader(): React.JSX.Element {
+	const router = useRouter();
 	const setPageType = useRecoilState(sideBarState)[1];
 	const formRef = React.useRef<HTMLFormElement>(null);
 	const groupFormRef = React.useRef<HTMLFormElement>(null);
@@ -61,6 +64,7 @@ export default function ChatListHeader(): React.JSX.Element {
 	const currentTheme = theme === "system" ? systemTheme : theme;
 	const isDark = currentTheme === "dark";
 	const { data: session } = useSession() as { data: UserSession | undefined };
+	const pusherKey = React.useMemo(() => session?.user?.email, [session?.user?.email]);
 	const handleGroupSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
 		e.preventDefault();
 		if (groupLoading) return;
@@ -72,8 +76,8 @@ export default function ChatListHeader(): React.JSX.Element {
 			toast.error("Please enter a group name");
 			return;
 		}
-		if (!selected.length) {
-			toast.error("Please select atleast one member");
+		if (selected.length < 2) {
+			toast.error("Please select atleast two members");
 			return;
 		}
 		setGroupLoading(true);
@@ -136,25 +140,7 @@ export default function ChatListHeader(): React.JSX.Element {
 		if (loading) return;
 		if (!formRef.current) return;
 		setLoading(true);
-		const params = {} as Record<string, string>;
-		if (selectedFile) {
-			void getImageUrl(selectedFile as string)
-				.then((url) => {
-					if (url) {
-						void axios.post("api/settings", { image: url }).catch((err) => {
-							toast.error("Something went wrong");
-							console.log(err);
-						});
-					}
-				})
-				.catch((err) => {
-					toast.error("File has to be less than 10MB");
-					console.log(err);
-				})
-				.finally(() => {
-					setSelectedFile(null);
-				});
-		}
+		const params = {} as { name?: string; about?: string; image?: string };
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 		const username = String(formRef.current.username.value.trim());
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -165,19 +151,51 @@ export default function ChatListHeader(): React.JSX.Element {
 		if (about) {
 			params.about = about;
 		}
-		void axios
-			.post("api/settings", params)
-			.then(() => {
-				toast.success("Profile updated successfully");
-			})
-			.catch((err) => {
-				toast.error("Something went wrong");
-				console.log(err);
-			})
-			.finally(() => {
-				setModalOpen(false);
-				setLoading(false);
-			});
+		if (selectedFile) {
+			void getImageUrl(selectedFile as string)
+				.then((url) => {
+					if (url) {
+						params.image = url;
+						void axios
+							.post("api/settings", params)
+							.then(() => {
+								toast.success("Profile updated successfully");
+							})
+							.catch((err) => {
+								toast.error("Something went wrong");
+								console.log(err);
+							})
+							.finally(() => {
+								setModalOpen(false);
+								setLoading(false);
+								setSelectedFile(null);
+							});
+					}
+				})
+				.catch((err) => {
+					toast.error("File has to be less than 10MB");
+					console.log(err);
+				})
+				.finally(() => {
+					setModalOpen(false);
+					setLoading(false);
+					setSelectedFile(null);
+				});
+		} else {
+			void axios
+				.post("api/settings", params)
+				.then(() => {
+					toast.success("Profile updated successfully");
+				})
+				.catch((err) => {
+					toast.error("Something went wrong");
+					console.log(err);
+				})
+				.finally(() => {
+					setModalOpen(false);
+					setLoading(false);
+				});
+		}
 	};
 	const addImageToPost = (e: UploadEvent): void => {
 		const reader = new FileReader();
@@ -220,7 +238,18 @@ export default function ChatListHeader(): React.JSX.Element {
 			setUsers(res);
 		});
 	}, []);
-	console.log(selected);
+	React.useEffect(() => {
+		if (!pusherKey) return;
+		pusherClient.subscribe(pusherKey);
+		const updateHandler = (data: User): void => {
+			setUser(data);
+		};
+		pusherClient.bind("user:update", updateHandler);
+		return () => {
+			pusherClient.unbind("user:update", updateHandler);
+			pusherClient.unsubscribe(pusherKey);
+		};
+	}, [pusherKey]);
 	return (
 		<>
 			<ToastContainer
@@ -262,7 +291,12 @@ export default function ChatListHeader(): React.JSX.Element {
 						<DropdownMenuContent
 							align="end"
 							className="mt-2 w-36 border-[#e9edef] bg-[#f0f2f5] dark:border-[#313d45] dark:bg-[#222e35]">
-							<DropdownMenuItem className="flex w-full cursor-pointer flex-row-reverse items-center justify-between hover:bg-[#b5b5b7] focus:bg-[#b5b5b7] dark:hover:bg-[#374650] dark:focus:bg-[#374650]">
+							<DropdownMenuItem
+								onClick={(): void => {
+									void signOut();
+									router.push("/");
+								}}
+								className="flex w-full cursor-pointer flex-row-reverse items-center justify-between hover:bg-[#b5b5b7] focus:bg-[#b5b5b7] dark:hover:bg-[#374650] dark:focus:bg-[#374650]">
 								<LogOutIcon className="h-4 w-4 cursor-pointer" />
 								<span className="ml-2">Logout</span>
 							</DropdownMenuItem>

@@ -8,7 +8,6 @@ import { sideBarState } from "../atoms/sideBar";
 import ChatListHeader from "./ChatListHeader";
 import ContactList from "./ContactList";
 import List from "./List";
-import SearchBar from "./SearchBar";
 
 export default function ChatList(): React.JSX.Element {
 	const pageType = useRecoilState(sideBarState)[0];
@@ -17,7 +16,6 @@ export default function ChatList(): React.JSX.Element {
 			{pageType === "default" && (
 				<motion.div>
 					<ChatListHeader />
-					<SearchBar />
 					<List />
 				</motion.div>
 			)}

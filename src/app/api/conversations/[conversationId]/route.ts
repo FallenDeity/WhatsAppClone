@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/actions/getCurrentUser";
 import { prisma } from "@/lib/prisma";
+import { pusherServer } from "@/lib/pusher";
 
 interface IParams {
 	conversationId?: string;
@@ -40,6 +41,11 @@ export async function DELETE(_: Request, { params }: { params: IParams }): Promi
 					hasSome: [currentUser.id],
 				},
 			},
+		});
+		existingConversation.users.map(async (user) => {
+			if (user.email) {
+				await pusherServer.trigger(user.email, "conversation:remove", existingConversation);
+			}
 		});
 		return NextResponse.json(deletedConversation);
 	} catch (error) {

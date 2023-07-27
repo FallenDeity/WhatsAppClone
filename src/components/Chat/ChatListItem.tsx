@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 "use client";
 
-import { format } from "date-fns";
 import Image from "next/image";
 import React from "react";
 import Avatar from "react-avatar";
 import { useRecoilState } from "recoil";
 
 import { FullConversationType } from "@/lib/types";
+import { formatMessageDate } from "@/lib/utils";
 
 import { conversationState } from "../atoms/conversationState";
 import AvatarGroup from "../AvatarGroup";
@@ -113,7 +113,7 @@ export default function ChatListItem({
 					{lastMessage?.createdAt && (
 						<div className="flex flex-col items-end justify-center space-y-2">
 							<span className="text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
-								{format(new Date(lastMessage?.createdAt), "p")}
+								{formatMessageDate(lastMessage.createdAt)}
 							</span>
 							{unseenMessages > 0 && (
 								<span className="flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-green-600 text-[8px] text-white">

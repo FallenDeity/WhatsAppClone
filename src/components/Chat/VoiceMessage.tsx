@@ -1,13 +1,13 @@
 "use client";
 
 import { User } from "@prisma/client";
-import { format } from "date-fns";
 import React from "react";
 import { BsCheck2, BsCheck2All } from "react-icons/bs";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import WaveSurfer from "wavesurfer.js";
 
 import { FullMessageType } from "@/lib/types";
+import { formatMessageDate } from "@/lib/utils";
 
 export default function VoiceMessage({
 	message,
@@ -89,7 +89,9 @@ export default function VoiceMessage({
 	return (
 		<div
 			className={`flex items-center gap-5 rounded-lg px-4 py-3 text-sm text-[#111b21] dark:text-[#daedef] ${
-				message.sender.email === email ? "bg-[#d9fdd3] dark:bg-[#005c4b]" : "bg-[#ffffff] dark:bg-[#202c33]"
+				message.sender.email === email
+					? "bg-[#d9fdd3] dark:bg-[#005c4b]"
+					: "mx-6 bg-[#ffffff] dark:bg-[#202c33]"
 			}`}>
 			{isPlaying ? (
 				<FaPause className="h-5 w-5 cursor-pointer" onClick={handlePauseRecording} />
@@ -112,7 +114,7 @@ export default function VoiceMessage({
 				)}
 				<div className="absolute bottom-0 right-0 flex flex-row items-end gap-1">
 					<span className="min-w-fit pt-2 text-[10px] font-light">
-						{format(new Date(message.createdAt), "hh:mm aa")}
+						{formatMessageDate(message.createdAt)}
 					</span>
 					{message.sender.email === email &&
 						(message.seenIds.length === users.length ? (

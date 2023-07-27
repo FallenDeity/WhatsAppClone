@@ -75,6 +75,10 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+	iframe {
+		color-scheme: light;
+	}
 }
 
 @layer components {

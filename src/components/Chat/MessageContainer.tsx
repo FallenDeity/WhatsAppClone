@@ -2,7 +2,6 @@
 
 import { User } from "@prisma/client";
 import axios from "axios";
-import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,6 +9,7 @@ import Avatar from "react-avatar";
 import { BsCheck2, BsCheck2All } from "react-icons/bs";
 
 import { FullMessageType } from "@/lib/types";
+import { formatMessageDate } from "@/lib/utils";
 
 import VoiceMessage from "./VoiceMessage";
 
@@ -84,7 +84,7 @@ export default function MessageContainer({
 											/>
 											<div className="absolute bottom-1 right-1 flex flex-row items-end gap-1">
 												<span className="min-w-fit pt-2 text-[10px] font-light">
-													{format(new Date(message.createdAt), "hh:mm aa")}
+													{formatMessageDate(message.createdAt)}
 												</span>
 												{message.sender.email === email &&
 													(message.seenIds.length === users.length ? (
@@ -107,7 +107,7 @@ export default function MessageContainer({
 										<span className="mx-1 break-all">{message.body}</span>
 										<div className="flex flex-row items-end gap-1">
 											<span className="min-w-fit pt-2 text-[10px] font-light">
-												{format(new Date(message.createdAt), "hh:mm aa")}
+												{formatMessageDate(message.createdAt)}
 											</span>
 											{message.sender.email === email &&
 												(message.seenIds.length === users.length ? (

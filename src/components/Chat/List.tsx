@@ -7,7 +7,6 @@ import { BiFilter } from "react-icons/bi";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
 // import { useRecoilState } from "recoil";
-import getConversations from "@/actions/getConversations";
 import { UserSession } from "@/lib/model";
 import { pusherClient } from "@/lib/pusher";
 import { FullConversationType } from "@/lib/types";
@@ -15,19 +14,12 @@ import { FullConversationType } from "@/lib/types";
 // import { conversationState } from "../atoms/conversationState";
 import ChatListItem from "./ChatListItem";
 
-export default function List(): React.JSX.Element {
+export default function List({ conversation }: { conversation: FullConversationType[] }): React.JSX.Element {
 	// const conversationId = useRecoilState(conversationState)[0];
 	const { data: session } = useSession() as { data: UserSession | undefined };
-	const [conversations, setConversations] = React.useState<FullConversationType[]>([]);
+	const [conversations, setConversations] = React.useState<FullConversationType[]>(conversation);
 	const searchRef = React.useRef<HTMLInputElement>(null);
 	const [searchResults, setSearchResults] = React.useState<FullConversationType[]>([]);
-	React.useEffect(() => {
-		async function getData(): Promise<void> {
-			const data = await getConversations();
-			setConversations(data);
-		}
-		void getData();
-	}, []);
 	const pusherKey = useMemo(() => session?.user?.email, [session?.user?.email]);
 	React.useEffect(() => {
 		if (!pusherKey) return;

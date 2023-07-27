@@ -2,7 +2,6 @@
 "use client";
 
 import axios from "axios";
-import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,8 +34,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useActiveList from "@/hooks/useActiveList";
 import { FullConversationType } from "@/lib/types";
+import { formatMessageDate } from "@/lib/utils";
 
+import { callState } from "../atoms/CallState";
 import { conversationState } from "../atoms/conversationState";
+import { messageSearch } from "../atoms/messageSearch";
 import AvatarGroup from "../AvatarGroup";
 
 export default function ChatHeader({
@@ -54,6 +56,8 @@ export default function ChatHeader({
 		}
 		return conversation.users.filter((user) => user.email !== email)[0];
 	}, [conversation, email]);
+	const setCallState = useRecoilState(callState)[1];
+	const [MessageSearch, setMessageSearch] = useRecoilState(messageSearch);
 	const setConversationState = useRecoilState(conversationState)[1];
 	const [modalOpen, setModalOpen] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
@@ -74,9 +78,12 @@ export default function ChatHeader({
 				setLoading(false);
 			});
 	};
-	console.log(otherUser);
 	return (
-		<div className="z-20 flex h-16 w-full items-center justify-between rounded-tr-lg bg-[#f0f2f5] px-4 py-4 dark:bg-[#222e35]">
+		<div
+			className={`z-20 flex h-16 w-full items-center justify-between ${
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				!MessageSearch && "rounded-tr-lg"
+			} bg-[#f0f2f5] px-4 py-4 dark:bg-[#222e35]`}>
 			<div className="flex items-center space-x-4">
 				{conversation?.isGroup ? (
 					<AvatarGroup conversation={conversation} users={conversation.users} />
@@ -106,15 +113,36 @@ export default function ChatHeader({
 							? "Online"
 							: // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 							otherUser?.lastSeen
-							? `Last seen ${format(otherUser.lastSeen, "p")}`
+							? `Last seen ${formatMessageDate(otherUser.lastSeen)}`
 							: "Offline"}
 					</span>
 				</div>
 			</div>
 			<div className="flex items-center space-x-6 text-[#54656f] dark:text-[#aebac1]">
-				<MdCall className="h-5 w-5 cursor-pointer" />
-				<BsFillCameraVideoFill className="h-5 w-5 cursor-pointer" />
-				<FaMagnifyingGlass className="h-5 w-5 cursor-pointer" />
+				{!conversation?.isGroup && (
+					<>
+						<MdCall
+							onClick={(): void =>
+								setCallState({
+									voiceCall: { user: otherUser, outgoing: true, roomID: Date.now(), type: "voice" },
+								})
+							}
+							className="h-5 w-5 cursor-pointer"
+						/>
+						<BsFillCameraVideoFill
+							onClick={(): void =>
+								setCallState({
+									videoCall: { user: otherUser, outgoing: true, roomID: Date.now(), type: "video" },
+								})
+							}
+							className="h-5 w-5 cursor-pointer"
+						/>
+					</>
+				)}
+				<FaMagnifyingGlass
+					onClick={(): void => setMessageSearch((prev) => !prev)}
+					className="h-5 w-5 cursor-pointer"
+				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger className="border-0 outline-none focus:outline-none">
 						<BsThreeDotsVertical className="h-5 w-5 cursor-pointer" />
@@ -154,7 +182,7 @@ export default function ChatHeader({
 								)}
 							</span>
 							<span className="mt-2 text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
-								Joined {format(otherUser?.createdAt ?? new Date(), "dd MMMM yyyy")}
+								Joined {formatMessageDate(conversation?.createdAt ?? new Date())}
 							</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem

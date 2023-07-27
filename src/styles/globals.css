@@ -79,6 +79,28 @@
 	iframe {
 		color-scheme: light;
 	}
+
+	.video-wrapper {
+		width: 610px;
+		margin: 0 auto;
+	}
+
+	.video-wrapper h4 {
+		width: 300px;
+		display: inline-block;
+		position: relative;
+	}
+	#remote-video,
+	#local-video {
+		width: 300px;
+		height: 270px;
+		display: inline-block;
+		position: relative;
+	}
+
+	.video-wrapper video {
+		height: auto;
+	}
 }
 
 @layer components {

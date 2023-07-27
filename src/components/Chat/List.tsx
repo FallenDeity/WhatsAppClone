@@ -34,7 +34,7 @@ export default function List({ conversation }: { conversation: FullConversationT
 			setConversations((prev) =>
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {
-						return { ...conversation, messages: [...conversation.messages, ...data.messages] };
+						return { ...conversation, messages: [...conversation?.messages, ...data.messages] };
 					}
 					return conversation;
 				})

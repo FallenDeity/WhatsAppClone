@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import crypto_1 from "crypto";

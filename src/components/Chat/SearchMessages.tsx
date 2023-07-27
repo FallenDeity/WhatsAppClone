@@ -24,7 +24,7 @@ export default function SearchMessages({ messages }: { messages: FullMessageType
 			setSearchResults([]);
 			return;
 		}
-		const results = messages.filter((message) => message.audio || message.image);
+		const results = messages.filter((message) => message.audio ?? message.image);
 		setSearchResults(results);
 	}, [viewMedia]);
 	const handleSearch = React.useCallback(() => {

@@ -92,6 +92,7 @@ export default function IncomingCall({
 										vid.srcObject = stream;
 										void vid.play();
 									});
+								// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 							} else if (updateType === "DELETE" && localStream && streamList[0].streamID) {
 								zg.destroyStream(localStream);
 								zg.stopPublishingStream(streamList[0].streamID);

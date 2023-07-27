@@ -57,6 +57,12 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 				setCallAccepted(true);
 			} else {
 				setCallState({});
+				zg?.stopPlayingStream(streamID);
+				zg?.stopPublishingStream(streamID);
+				zg?.logoutRoom(String(call.roomID));
+				if (remoteStream) zg?.destroyStream(remoteStream);
+				if (localStream) zg?.destroyStream(localStream);
+				zg?.destroyEngine();
 			}
 		});
 		return () => {

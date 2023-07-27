@@ -36,6 +36,12 @@ export default function IncomingCall({
 		pusherClient.subscribe(email);
 		pusherClient.bind("call:cancelled", () => {
 			setCallState({});
+			zg?.stopPlayingStream(streamID);
+			zg?.stopPublishingStream(streamID);
+			zg?.logoutRoom(String(call.roomID));
+			if (remoteStream) zg?.destroyStream(remoteStream);
+			if (localStream) zg?.destroyStream(localStream);
+			zg?.destroyEngine();
 		});
 		return () => {
 			pusherClient.unsubscribe(email);

@@ -100,6 +100,7 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 					const remoteView = _zg.createRemoteStreamView(remoteStream);
 					setRemoteStream(remoteStream);
 					remoteView.play("remote-video", { enableAutoplayDialog: true });
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 				} else if (updateType === "DELETE") {
 					_zg.stopPlayingStream(streamList[0].streamID);
 				}
@@ -164,7 +165,10 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 							<div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
 							<span className="text-md">{formatTime(duration)}</span>
 						</div>
-						<div className="absolute bottom-5 right-5 z-50 h-auto w-56 shadow-xl" id="local-video" />
+						<div
+							className="absolute bottom-5 right-5 z-50 h-auto w-32 shadow-xl sm:w-48 lg:w-56"
+							id="local-video"
+						/>
 						<div className="hidden" id="local-audio" />
 						<button
 							className="absolute bottom-5 left-0 right-0 z-50 mx-auto flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full bg-red-500 p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"

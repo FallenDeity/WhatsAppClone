@@ -34,6 +34,7 @@ export default function List({ conversation }: { conversation: FullConversationT
 			setConversations((prev) =>
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {
+						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 						return { ...conversation, messages: [...conversation?.messages, ...data.messages] };
 					}
 					return conversation;

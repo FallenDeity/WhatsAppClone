@@ -1,6 +1,10 @@
+import { Metadata } from "next";
 import React from "react";
 
 import AuthForm from "@/components/AuthForm";
+import { meta } from "@/lib/utils";
+
+export const metadata: Metadata = meta;
 
 export default function Home(): React.JSX.Element {
 	return (

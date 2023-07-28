@@ -19,7 +19,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
 				<SessionProvider>
 					<RecoilRoot>
 						<ThemeProvider attribute="class">
-							{" "}
 							<ActiveStatus />
 							{children}
 						</ThemeProvider>

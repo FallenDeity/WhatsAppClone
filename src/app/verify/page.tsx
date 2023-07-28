@@ -1,12 +1,16 @@
+import { Metadata } from "next";
 import React from "react";
 
 import Verification from "@/components/Verify";
+import { meta } from "@/lib/utils";
 
 interface VerifyPageProps {
 	searchParams: {
 		token?: string;
 	};
 }
+
+export const metadata: Metadata = meta;
 
 export default function VerifyPage({ searchParams: params }: VerifyPageProps): React.JSX.Element {
 	const token = params.token;

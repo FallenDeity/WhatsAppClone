@@ -260,7 +260,7 @@ export default function ChatListHeader(): React.JSX.Element {
 				pauseOnHover
 				theme={isDark ? "dark" : "light"}
 			/>
-			<div className="flex h-16 items-center justify-between rounded-tl-lg bg-[#f0f2f5] px-4 py-3 dark:bg-[#222e35]">
+			<div className="flex h-16 items-center justify-between bg-[#f0f2f5] px-4 py-3 dark:bg-[#222e35] lg:rounded-tl-lg">
 				<div className="flex items-center space-x-4">
 					{user?.image ? (
 						<Image

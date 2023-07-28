@@ -189,7 +189,7 @@ export default function AudioBar({
 			<div className="pt-1 text-[#54656f] dark:text-[#aebac1]">
 				<FaTrash className="h-5 w-5 cursor-pointer" onClick={(): void => hide(false)} />
 			</div>
-			<div className="mx-4 flex h-10 items-center justify-center gap-3 rounded-full bg-[#ffffff] px-4 py-2 text-lg text-[#54656f] drop-shadow-lg dark:bg-[#111b21] dark:text-[#e4e6eb]">
+			<div className="mx-2 flex h-10 items-center justify-center gap-3 rounded-full bg-[#ffffff] px-4 py-2 text-lg text-[#54656f] drop-shadow-lg dark:bg-[#111b21] dark:text-[#e4e6eb] sm:mx-4">
 				{recording ? (
 					<div className="flex animate-pulse flex-row text-sm text-red-500">
 						<span>Recording {formatTime(duration)}</span>
@@ -209,14 +209,14 @@ export default function AudioBar({
 				)}
 				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 				{/* @ts-expect-error */}
-				<div className="w-48 lg:w-60" ref={waveFormRef} hidden={recording} />
+				<div className="w-32 sm:w-48 lg:w-60" ref={waveFormRef} hidden={recording} />
 				{audio && isPlaying && (
-					<span className="text-xs text-[#54656f] dark:text-[#aebac1]">
+					<span className="hidden text-xs text-[#54656f] dark:text-[#aebac1] sm:flex">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}
 					</span>
 				)}
 				{audio && !isPlaying && !recording && (
-					<span className="text-xs text-[#54656f] dark:text-[#aebac1]">
+					<span className="hidden text-xs text-[#54656f] dark:text-[#aebac1] sm:flex">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}
 					</span>
 				)}

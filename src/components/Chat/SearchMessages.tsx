@@ -40,7 +40,7 @@ export default function SearchMessages({ messages }: { messages: FullMessageType
 	}, [messages]);
 	return (
 		<div className="z-20 flex h-[100vh] max-h-screen w-full flex-col items-center border border-l-0 border-[#e9edef] bg-white dark:border-[#313d45] dark:bg-[#111b21] lg:h-[95vh] lg:rounded-r-lg">
-			<div className="flex h-16 w-full items-center rounded-tr-lg bg-[#f0f2f5] px-4 py-3 dark:bg-[#222e35]">
+			<div className="flex h-16 w-full items-center bg-[#f0f2f5] px-4 py-3 dark:bg-[#222e35] lg:rounded-tr-lg">
 				<X
 					onClick={(): void => setMessageSearch(false)}
 					className="cursor-pointer text-xl text-[#54656f] dark:text-[#aebac1]"
@@ -101,7 +101,7 @@ export default function SearchMessages({ messages }: { messages: FullMessageType
 								<div className="ml-3 flex w-full flex-row justify-between space-x-3">
 									<div className="flex flex-col justify-center space-y-2">
 										<span className="text-xs">{message.sender.name}</span>
-										<div className="line-clamp-1 flex w-60 flex-row justify-between space-x-3">
+										<div className="line-clamp-1 flex w-48 flex-row justify-between space-x-3 lg:w-60">
 											{message.body && <span className="text-xs">{message.body}</span>}
 											{(message.image || message.audio) && (
 												<Link

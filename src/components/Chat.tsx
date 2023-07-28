@@ -166,9 +166,9 @@ export default function Chat(): React.JSX.Element {
 						) : (
 							<>
 								<div className="absolute -z-10 flex h-[20vh] w-full bg-[#00a783] dark:bg-[#10745e] " />
-								{!conversationId && <ChatList />}
+								<ChatList />
 								{isTalking ? (
-									<div className={MessageSearch ? "grid grid-cols-2" : "grid-cols-2"}>
+									<div className={MessageSearch ? "grid grid-cols-1 lg:grid-cols-2" : "grid-cols-2"}>
 										<ChatContainer conversation={conversation} messages={messages} />
 										{MessageSearch && <SearchMessages messages={messages} />}
 									</div>

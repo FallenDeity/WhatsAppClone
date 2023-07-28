@@ -26,10 +26,10 @@ export default function ChatContainer({
 		<>
 			{conversation ? (
 				<div
-					className={`z-15 flex h-[100vh] max-h-screen w-full flex-col items-center border border-b-0 border-[#e9edef] bg-[#efeae2] dark:border-[#313d45] dark:bg-[#0b141a] lg:h-[95vh] ${
+					className={`z-15 h-[100vh] max-h-screen w-full flex-col items-center border border-b-0 border-[#e9edef] bg-[#efeae2] dark:border-[#313d45] dark:bg-[#0b141a] lg:flex lg:h-[95vh] ${
 						// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 						!MessageSearch && "lg:rounded-r-lg"
-					}`}>
+					} ${MessageSearch ? "hidden" : "flex"}`}>
 					<ChatHeader conversation={conversation} email={session?.user?.email ?? ""} />
 					<MessageContainer
 						users={conversation.users}

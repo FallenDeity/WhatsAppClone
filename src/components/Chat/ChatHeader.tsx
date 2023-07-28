@@ -82,7 +82,7 @@ export default function ChatHeader({
 		<div
 			className={`z-20 flex h-16 w-full items-center justify-between ${
 				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				!MessageSearch && "rounded-tr-lg"
+				!MessageSearch && "lg:rounded-tr-lg"
 			} bg-[#f0f2f5] px-4 py-4 dark:bg-[#222e35]`}>
 			<div className="flex items-center space-x-4">
 				<BsArrowLeft

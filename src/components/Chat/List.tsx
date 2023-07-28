@@ -35,11 +35,15 @@ export default function List({ conversation }: { conversation: FullConversationT
 			setConversations((prev) =>
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {
+						const dataTime = new Date(data.messages[data.messages.length - 1].createdAt);
 						return {
 							...conversation,
 							messages: [...conversation.messages, data.messages[data.messages.length - 1]],
 							messagesIds: [...conversation.messagesIds, data.messages[data.messages.length - 1].id],
-							lastMessageAt: new Date(data.messages[data.messages.length - 1].createdAt),
+							lastMessageAt:
+								conversation.lastMessageAt.getTime() > dataTime.getTime()
+									? conversation.lastMessageAt
+									: dataTime,
 						};
 					}
 					return conversation;

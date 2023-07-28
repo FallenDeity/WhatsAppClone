@@ -99,7 +99,7 @@ export default function MessageContainer({
 								{message.audio && <VoiceMessage users={users} email={email} message={message} />}
 								{message.body && (
 									<div
-										className={`flex max-w-[45%] items-center gap-2 rounded-md px-2 py-[3px] text-sm text-[#111b21] dark:text-[#daedef] ${
+										className={`flex max-w-[90%] items-center gap-2 rounded-md px-2 py-[3px] text-sm text-[#111b21] dark:text-[#daedef] sm:max-w-[70%] md:max-w-[45%] ${
 											message.sender.email === email
 												? "bg-[#d9fdd3] dark:bg-[#005c4b]"
 												: "mx-6 bg-[#ffffff] dark:bg-[#202c33]"

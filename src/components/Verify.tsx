@@ -17,7 +17,9 @@ import { UserSession } from "@/lib/model";
 
 export default function Verification({ token }: { token?: string }): React.JSX.Element {
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const { resolvedTheme } = useTheme();
+	const { systemTheme, theme } = useTheme();
+	const currentTheme = theme === "system" ? systemTheme : theme;
+	const isDark = currentTheme === "dark";
 	const { data: session } = useSession() as { data: UserSession | undefined };
 	const router = useRouter();
 	React.useEffect(() => {
@@ -97,7 +99,7 @@ export default function Verification({ token }: { token?: string }): React.JSX.E
 				autoClose={5000}
 				closeOnClick
 				pauseOnFocusLoss
-				theme={resolvedTheme === "dark" ? "dark" : "light"}
+				theme={isDark ? "dark" : "light"}
 			/>
 		</>
 	);

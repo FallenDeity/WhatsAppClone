@@ -68,13 +68,15 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 				setCallAccepted(true);
 			} else {
 				toast.error("Call ended!");
-				setCallState({});
 				zg?.stopPlayingStream(streamID);
 				zg?.stopPublishingStream(streamID);
-				zg?.logoutRoom(String(call.roomID));
 				if (remoteStream) zg?.destroyStream(remoteStream);
 				if (localStream) zg?.destroyStream(localStream);
+				zg?.logoutRoom(String(call.roomID));
 				zg?.destroyEngine();
+				setCallAccepted(false);
+				setEndingLoading(false);
+				setCallState({});
 			}
 		});
 		return () => {
@@ -114,7 +116,7 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 				.then(async (result) => {
 					if (result) {
 						const localStream = await _zg.createStream({
-							camera: { audio: true, video: call.type === "video" },
+							camera: { audio: true, video: call.type === "video", videoQuality: 3 },
 						});
 						const localView = _zg.createLocalStreamView(localStream);
 						localView.play(call.type === "video" ? "local-video" : "local-audio", {
@@ -144,77 +146,124 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 		return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 	};
 	return (
-		<div className="z-20 flex h-[100vh] max-h-screen w-full items-center justify-center overflow-hidden border border-[#e9edef] bg-[#efeae2] text-[#54656f] dark:border-[#313d45] dark:bg-[#0b141a] dark:text-[#aebac1] lg:h-[95vh] lg:rounded-lg">
-			<div className="flex flex-col items-center justify-center space-y-10">
-				{!callAccepted && (
-					<span className="my-3 text-sm text-opacity-30">
-						{call.type === "video" ? "Video Call" : "Voice Call"}
-					</span>
-				)}
-				<div className={`${callAccepted && call.type === "video" ? "hidden" : ""}`}>
-					{(!callAccepted || call.type === "voice") &&
-						(call.user?.image ? (
-							<Image
-								src={call.user.image}
-								alt={call.user.name ?? ""}
-								className="rounded-full"
-								height={200}
-								width={200}
-							/>
-						) : (
-							<Avatar
-								name={call.user?.name ?? ""}
-								className="rounded-full"
-								size="200"
-								textSizeRatio={2}
-							/>
-						))}
-				</div>
-				<span className="mt-5 text-5xl font-semibold">{call.user?.name}</span>
-				{callAccepted ? (
-					<div className="flex flex-row items-center justify-center space-x-3">
-						<div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
-						<span className="text-md">{formatTime(duration)}</span>
+		<>
+			{callAccepted && call.type === "video" ? (
+				<div className="z-20 flex h-[100vh] max-h-screen w-full items-center justify-center overflow-hidden border border-[#e9edef] bg-[#efeae2] text-[#54656f] dark:border-[#313d45] dark:bg-[#0b141a] dark:text-[#aebac1] lg:h-[95vh] lg:rounded-lg">
+					<div className="relative h-full w-full rounded-lg bg-black text-white" id="remote-video">
+						<span className="absolute left-5 top-5 z-50 flex items-center justify-center text-xl font-extrabold">
+							{call.user?.name}
+						</span>
+						<div className="absolute right-5 top-5 z-50 flex flex-row items-center justify-center space-x-3">
+							<div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
+							<span className="text-md">{formatTime(duration)}</span>
+						</div>
+						<div className="absolute bottom-5 right-5 z-50 h-auto w-56 shadow-xl" id="local-video" />
+						<div className="hidden" id="local-audio" />
+						<button
+							className="absolute bottom-5 left-0 right-0 z-50 mx-auto flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full bg-red-500 p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							onClick={(): void => {
+								if (endingLoading) return;
+								setEndingLoading(true);
+								void axios
+									.post("/api/call/accepted", {
+										id: call.roomID,
+										receiver: call.user,
+										accepted: false,
+									})
+									.then(() => {
+										zg?.stopPlayingStream(streamID);
+										zg?.stopPublishingStream(streamID);
+										if (remoteStream) zg?.destroyStream(remoteStream);
+										if (localStream) zg?.destroyStream(localStream);
+										zg?.logoutRoom(String(call.roomID));
+										zg?.destroyEngine();
+										setCallAccepted(false);
+										setEndingLoading(false);
+										setCallState({});
+										// audio?.pause();
+										// setAudio(null);
+									});
+							}}
+							disabled={endingLoading}>
+							<MdCallEnd className="h-6 w-6" />
+						</button>
 					</div>
-				) : (
-					<span className="mt-5 text-xl font-semibold">
-						<BeatLoader color="#54656f" />
-					</span>
-				)}
-				<div className={`video-wrapper ${callAccepted && call.type === "video" ? "" : "hidden"}`}>
-					<div id="local-video" />
-					<div id="local-audio" className="hidden" />
-					<div id="remote-video" />
 				</div>
-				<button
-					className="mt-5 flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full bg-red-500 p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
-					onClick={(): void => {
-						if (endingLoading) return;
-						setEndingLoading(true);
-						void axios
-							.post("/api/call/accepted", {
-								id: call.roomID,
-								receiver: call.user,
-								accepted: false,
-							})
-							.then(() => {
-								setCallState({});
-								zg?.stopPlayingStream(streamID);
-								zg?.stopPublishingStream(streamID);
-								if (remoteStream) zg?.destroyStream(remoteStream);
-								if (localStream) zg?.destroyStream(localStream);
-								zg?.logoutRoom(String(call.roomID));
-								zg?.destroyEngine();
-								setCallAccepted(false);
-								setEndingLoading(false);
-								// audio?.pause();
-								// setAudio(null);
-							});
-					}}
-					disabled={endingLoading}>
-					<MdCallEnd className="h-6 w-6" />
-				</button>
-			</div>
-		</div>
+			) : (
+				<div className="z-20 flex h-[100vh] max-h-screen w-full items-center justify-center overflow-hidden border border-[#e9edef] bg-[#efeae2] text-[#54656f] dark:border-[#313d45] dark:bg-[#0b141a] dark:text-[#aebac1] lg:h-[95vh] lg:rounded-lg">
+					<div className="flex h-full w-full flex-col items-center justify-center space-y-10">
+						{!callAccepted && (
+							<span className="my-3 text-sm text-opacity-30">
+								{call.type === "video" ? "Video Call" : "Voice Call"}
+							</span>
+						)}
+						<div className={`${callAccepted && call.type === "video" ? "hidden" : ""}`}>
+							{(!callAccepted || call.type === "voice") &&
+								(call.user?.image ? (
+									<Image
+										src={call.user.image}
+										alt={call.user.name ?? ""}
+										className="rounded-full"
+										height={200}
+										width={200}
+									/>
+								) : (
+									<Avatar
+										name={call.user?.name ?? ""}
+										className="rounded-full"
+										size="200"
+										textSizeRatio={2}
+									/>
+								))}
+						</div>
+						<span className="mt-5 text-5xl font-semibold">{call.user?.name}</span>
+						{callAccepted ? (
+							<div className="flex flex-row items-center justify-center space-x-3">
+								<div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
+								<span className="text-md">{formatTime(duration)}</span>
+							</div>
+						) : (
+							<span className="mt-5 text-xl font-semibold">
+								<BeatLoader color="#54656f" />
+							</span>
+						)}
+						<div
+							className={`relative rounded-lg ${callAccepted && call.type === "video" ? "" : "hidden"}`}
+							id="remote-video">
+							<div className="absolute bottom-5 right-5 z-50 h-auto w-56 shadow-xl" id="local-video" />
+							<div className="hidden" id="local-audio" />
+						</div>
+						<button
+							className="mt-5 flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full bg-red-500 p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							onClick={(): void => {
+								if (endingLoading) return;
+								setEndingLoading(true);
+								void axios
+									.post("/api/call/accepted", {
+										id: call.roomID,
+										receiver: call.user,
+										accepted: false,
+									})
+									.then(() => {
+										zg?.stopPlayingStream(streamID);
+										zg?.stopPublishingStream(streamID);
+										if (remoteStream) zg?.destroyStream(remoteStream);
+										if (localStream) zg?.destroyStream(localStream);
+										zg?.logoutRoom(String(call.roomID));
+										zg?.destroyEngine();
+										setCallAccepted(false);
+										setEndingLoading(false);
+										setCallState({});
+										// audio?.pause();
+										// setAudio(null);
+									});
+							}}
+							disabled={endingLoading}>
+							<MdCallEnd className="h-6 w-6" />
+						</button>
+					</div>
+				</div>
+			)}
+		</>
 	);
 }

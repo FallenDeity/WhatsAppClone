@@ -293,8 +293,9 @@ export default function ChatListHeader(): React.JSX.Element {
 							className="mt-2 w-36 border-[#e9edef] bg-[#f0f2f5] dark:border-[#313d45] dark:bg-[#222e35]">
 							<DropdownMenuItem
 								onClick={(): void => {
-									void signOut();
-									router.push("/");
+									void signOut().then(() => {
+										router.push("/");
+									});
 								}}
 								className="flex w-full cursor-pointer flex-row-reverse items-center justify-between hover:bg-[#b5b5b7] focus:bg-[#b5b5b7] dark:hover:bg-[#374650] dark:focus:bg-[#374650]">
 								<LogOutIcon className="h-4 w-4 cursor-pointer" />

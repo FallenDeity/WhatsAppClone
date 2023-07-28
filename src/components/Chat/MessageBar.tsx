@@ -11,10 +11,14 @@ import { ImAttachment } from "react-icons/im";
 import { MdSend } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
 
+import { CloudinaryTheme } from "@/lib/utils";
+
 import AudioBar from "./AudioBar";
 
 export default function MessageBar({ id }: { id: string }): React.JSX.Element {
-	const { resolvedTheme } = useTheme();
+	const { systemTheme, theme } = useTheme();
+	const currentTheme = theme === "system" ? systemTheme : theme;
+	const isDark = currentTheme === "dark";
 	const textRef = React.useRef<HTMLInputElement>(null);
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [text, setText] = React.useState<string>("");
@@ -69,7 +73,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 						<CldUploadButton
 							onUpload={handleUpload}
 							uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? ""}
-							options={{ maxFiles: 1, styles: {} }}>
+							options={{ maxFiles: 1, styles: isDark ? CloudinaryTheme.dark : CloudinaryTheme.light }}>
 							<ImAttachment title="Attach File" className="h-5 w-5 cursor-pointer" />
 						</CldUploadButton>
 						{showEmoji && (
@@ -77,7 +81,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 								<EmojiPicker
 									onEmojiClick={handleEmojiClick}
 									lazyLoadEmojis={true}
-									theme={resolvedTheme === "dark" ? Theme.DARK : Theme.LIGHT}
+									theme={isDark ? Theme.DARK : Theme.LIGHT}
 								/>
 							</div>
 						)}

@@ -79,7 +79,7 @@
 	iframe {
 		color-scheme: light;
 	}
-
+	/*
 	.video-wrapper {
 		width: 610px;
 		margin: 0 auto;
@@ -101,6 +101,7 @@
 	.video-wrapper video {
 		height: auto;
 	}
+	*/
 }
 
 @layer components {

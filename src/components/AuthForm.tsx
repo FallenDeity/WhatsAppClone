@@ -34,7 +34,9 @@ enum FormVariants {
 export default function AuthForm(): React.JSX.Element {
 	const router = useRouter();
 	const { data: session } = useSession() as { data: UserSession | undefined };
-	const { resolvedTheme } = useTheme();
+	const { systemTheme, theme } = useTheme();
+	const currentTheme = theme === "system" ? systemTheme : theme;
+	const isDark = currentTheme === "dark";
 	const [variant, setVariant] = React.useState<FormVariants>(FormVariants.LOGIN);
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const toggleVariant = React.useCallback(() => {
@@ -232,12 +234,12 @@ export default function AuthForm(): React.JSX.Element {
 							</div>
 							<div className="mt-6 flex gap-2">
 								<AuthSocialButton
-									className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+									className="bg-gray-50 text-black hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
 									icon={BsGithub}
 									onClick={(): void => socialAction("github")}
 								/>
 								<AuthSocialButton
-									className="bg-gray-50 text-black hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+									className="bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
 									icon={FcGoogle}
 									onClick={(): void => socialAction("google")}
 								/>
@@ -259,7 +261,7 @@ export default function AuthForm(): React.JSX.Element {
 				autoClose={5000}
 				closeOnClick
 				pauseOnFocusLoss
-				theme={resolvedTheme === "dark" ? "dark" : "light"}
+				theme={isDark ? "dark" : "light"}
 			/>
 		</>
 	);

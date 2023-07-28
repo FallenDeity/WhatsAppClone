@@ -36,7 +36,9 @@ export default function Chat(): React.JSX.Element {
 	const isTalking = useRecoilState(conversationState)[0];
 	const [user, setUser] = React.useState<User | null>(null);
 	const [loading, setLoading] = React.useState<boolean>(true);
-	const { resolvedTheme } = useTheme();
+	const { systemTheme, theme } = useTheme();
+	const currentTheme = theme === "system" ? systemTheme : theme;
+	const isDark = currentTheme === "dark";
 	const { data: session } = useSession() as { data: UserSession | undefined };
 	const router = useRouter();
 	const [messages, setMessages] = React.useState<FullConversationType["messages"]>([]);
@@ -96,13 +98,9 @@ export default function Chat(): React.JSX.Element {
 					setCallState({ videoCall: call });
 				}
 			});
-			pusherClient.bind("call:cancelled", () => {
-				setCallState({});
-			});
 			return () => {
 				pusherClient.unsubscribe(session.user?.email ?? "");
 				pusherClient.unbind("call:incoming");
-				pusherClient.unbind("call:cancelled");
 			};
 		}
 		return () => null;
@@ -184,7 +182,7 @@ export default function Chat(): React.JSX.Element {
 							autoClose={5000}
 							closeOnClick
 							pauseOnFocusLoss
-							theme={resolvedTheme === "dark" ? "dark" : "light"}
+							theme={isDark ? "dark" : "light"}
 						/>
 					</div>
 				)}

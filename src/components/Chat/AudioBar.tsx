@@ -20,7 +20,9 @@ export default function AudioBar({
 	conversationId: string;
 	hide: (arg: boolean) => void;
 }): React.JSX.Element {
-	const { resolvedTheme } = useTheme();
+	const { systemTheme, theme } = useTheme();
+	const currentTheme = theme === "system" ? systemTheme : theme;
+	const isDark = currentTheme === "dark";
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [recording, setRecording] = React.useState<boolean>(false);
 	const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
@@ -182,7 +184,7 @@ export default function AudioBar({
 				autoClose={5000}
 				closeOnClick
 				pauseOnFocusLoss
-				theme={resolvedTheme === "dark" ? "dark" : "light"}
+				theme={isDark ? "dark" : "light"}
 			/>
 			<div className="pt-1 text-[#54656f] dark:text-[#aebac1]">
 				<FaTrash className="h-5 w-5 cursor-pointer" onClick={(): void => hide(false)} />

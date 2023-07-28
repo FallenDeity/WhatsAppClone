@@ -31,7 +31,7 @@ export default function MessageContainer({
 	return (
 		<div className="relative flex h-full w-full flex-col-reverse overflow-y-auto scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-700">
 			<div className="z-1 fixed left-0 top-0 h-full w-full bg-chat-background bg-fixed opacity-50 dark:opacity-5" />
-			<div className="relative bottom-0 left-0 z-40 px-10 py-6">
+			<div className="relative bottom-0 left-0 z-40 px-2 py-6 lg:px-10">
 				{image && (
 					<div className="z-80 fixed left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/70">
 						<button

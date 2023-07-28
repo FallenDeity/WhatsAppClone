@@ -209,7 +209,7 @@ export default function AudioBar({
 				)}
 				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 				{/* @ts-expect-error */}
-				<div className="w-60" ref={waveFormRef} hidden={recording} />
+				<div className="w-48 lg:w-60" ref={waveFormRef} hidden={recording} />
 				{audio && isPlaying && (
 					<span className="text-xs text-[#54656f] dark:text-[#aebac1]">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}

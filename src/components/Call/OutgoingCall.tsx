@@ -116,7 +116,14 @@ export default function OutgoingCall({ call, user }: { call: Call; user: User })
 				.then(async (result) => {
 					if (result) {
 						const localStream = await _zg.createStream({
-							camera: { audio: true, video: call.type === "video", videoQuality: 3 },
+							camera: {
+								audio: true,
+								video: call.type === "video",
+								videoQuality: 3,
+								ANS: true,
+								AGC: true,
+								AEC: true,
+							},
 						});
 						const localView = _zg.createLocalStreamView(localStream);
 						localView.play(call.type === "video" ? "local-video" : "local-audio", {

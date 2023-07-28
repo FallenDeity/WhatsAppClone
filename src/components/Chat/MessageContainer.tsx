@@ -24,10 +24,34 @@ export default function MessageContainer({
 	messages: FullMessageType[];
 	email: string;
 }): React.JSX.Element {
+	const bottomRef = React.useRef<HTMLDivElement>(null);
+	const [userScrolling, setUserScrolling] = React.useState<boolean>(false);
 	const [image, setImage] = React.useState<string | null>(null);
 	React.useEffect(() => {
 		void axios.post(`/api/conversations/${id}/seen`);
+		if (bottomRef.current && !userScrolling) {
+			bottomRef.current.scrollIntoView({ behavior: "smooth" });
+		}
 	}, [messages]);
+	React.useEffect(() => {
+		if (bottomRef.current) {
+			const handleScroll = (): void => {
+				if (bottomRef.current) {
+					const { scrollTop, scrollHeight, clientHeight } = bottomRef.current;
+					if (scrollTop + clientHeight < scrollHeight) {
+						setUserScrolling(true);
+					} else {
+						setUserScrolling(false);
+					}
+				}
+			};
+			bottomRef.current.addEventListener("scroll", handleScroll);
+			return () => {
+				bottomRef.current?.removeEventListener("scroll", handleScroll);
+			};
+		}
+		return () => null;
+	}, [bottomRef]);
 	return (
 		<div className="relative flex h-full w-full flex-col-reverse overflow-y-auto scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-700">
 			<div className="z-1 fixed left-0 top-0 h-full w-full bg-chat-background bg-fixed opacity-50 dark:opacity-5" />
@@ -149,6 +173,7 @@ export default function MessageContainer({
 								)}
 							</div>
 						))}
+						<div ref={bottomRef} />
 					</div>
 				</div>
 			</div>

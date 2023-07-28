@@ -31,15 +31,21 @@ export default function List({ conversation }: { conversation: FullConversationT
 			});
 		};
 		const updateHandler = (data: FullConversationType): void => {
+			console.log(data);
 			setConversations((prev) =>
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {
-						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-						return { ...conversation, messages: [...conversation?.messages, ...data?.messages] };
+						return {
+							...conversation,
+							messages: [...conversation.messages, data.messages[data.messages.length - 1]],
+							messagesIds: [...conversation.messagesIds, data.messages[data.messages.length - 1].id],
+							lastMessageAt: new Date(data.messages[data.messages.length - 1].createdAt),
+						};
 					}
 					return conversation;
 				})
 			);
+			setConversations((prev) => prev.sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime()));
 		};
 		const deleteHandler = (data: FullConversationType): void => {
 			setConversations((prev) => {
@@ -74,6 +80,7 @@ export default function List({ conversation }: { conversation: FullConversationT
 		);
 		setSearchResults(results);
 	};
+	console.log(conversations);
 	return (
 		<>
 			<div className="flex h-14 items-center gap-1 pl-5">

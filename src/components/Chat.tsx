@@ -33,7 +33,6 @@ import SearchMessages from "./Chat/SearchMessages";
 export default function Chat(): React.JSX.Element {
 	const [CallState, setCallState] = useRecoilState(callState);
 	const MessageSearch = useRecoilState(messageSearch)[0];
-	const isTalking = useRecoilState(conversationState)[0];
 	const [user, setUser] = React.useState<User | null>(null);
 	const [loading, setLoading] = React.useState<boolean>(true);
 	const { systemTheme, theme } = useTheme();
@@ -167,7 +166,7 @@ export default function Chat(): React.JSX.Element {
 							<>
 								<div className="absolute -z-10 flex h-[20vh] w-full bg-[#00a783] dark:bg-[#10745e] " />
 								<ChatList />
-								{isTalking ? (
+								{conversationId ? (
 									<div className={MessageSearch ? "grid grid-cols-1 lg:grid-cols-2" : "grid-cols-2"}>
 										<ChatContainer conversation={conversation} messages={messages} />
 										{MessageSearch && <SearchMessages messages={messages} />}

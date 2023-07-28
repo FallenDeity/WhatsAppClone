@@ -247,7 +247,7 @@ export default function AuthForm(): React.JSX.Element {
 						</div>
 						<div className="mt-6 flex justify-center gap-2 px-2 text-sm text-gray-500">
 							<div>
-								{variant === FormVariants.LOGIN ? "New to whatsapp?" : "Already have an account?"}
+								{variant === FormVariants.LOGIN ? "New to whatsapp clone?" : "Already have an account?"}
 							</div>
 							<div onClick={toggleVariant} className="cursor-pointer text-blue-500">
 								{variant === FormVariants.LOGIN ? "Create an account" : "Login"}

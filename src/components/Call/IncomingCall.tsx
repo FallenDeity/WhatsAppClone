@@ -218,6 +218,12 @@ export default function IncomingCall({
 								<BeatLoader color="#54656f" />
 							</span>
 						)}
+						<div
+							className={`relative rounded-lg ${callAccepted && call.type === "video" ? "" : "hidden"}`}
+							id="remote-video">
+							<div className="absolute bottom-5 right-5 z-50 h-auto w-56 shadow-xl" id="local-video" />
+							<div className="hidden" id="local-audio" />
+						</div>
 						<div className="flex flex-row space-x-5">
 							{!callAccepted && (
 								<button

@@ -31,7 +31,6 @@ export default function List({ conversation }: { conversation: FullConversationT
 			});
 		};
 		const updateHandler = (data: FullConversationType): void => {
-			console.log(data);
 			setConversations((prev) =>
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {
@@ -84,7 +83,6 @@ export default function List({ conversation }: { conversation: FullConversationT
 		);
 		setSearchResults(results);
 	};
-	console.log(conversations);
 	return (
 		<>
 			<div className="flex h-14 items-center gap-1 pl-5">

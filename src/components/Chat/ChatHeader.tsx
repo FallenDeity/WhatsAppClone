@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import Avatar from "react-avatar";
 import { BiTrash } from "react-icons/bi";
-import { BsFillCameraVideoFill, BsThreeDotsVertical } from "react-icons/bs";
+import { BsArrowLeft, BsFillCameraVideoFill, BsThreeDotsVertical } from "react-icons/bs";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdCall } from "react-icons/md";
 import { PulseLoader } from "react-spinners";
@@ -85,6 +85,15 @@ export default function ChatHeader({
 				!MessageSearch && "rounded-tr-lg"
 			} bg-[#f0f2f5] px-4 py-4 dark:bg-[#222e35]`}>
 			<div className="flex items-center space-x-4">
+				<BsArrowLeft
+					onClick={(): void => {
+						setMessageSearch(false);
+						setConversationState("");
+						setModalOpen(false);
+						setLoading(false);
+					}}
+					className="h-5 w-5 cursor-pointer"
+				/>
 				{conversation?.isGroup ? (
 					<AvatarGroup conversation={conversation} users={conversation.users} />
 				) : otherUser?.image ? (

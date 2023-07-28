@@ -79,6 +79,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 						{showEmoji && (
 							<div className="absolute bottom-20 left-5 z-40">
 								<EmojiPicker
+									width={300}
 									onEmojiClick={handleEmojiClick}
 									lazyLoadEmojis={true}
 									theme={isDark ? Theme.DARK : Theme.LIGHT}

@@ -158,7 +158,7 @@ export default function Chat(): React.JSX.Element {
 				!CallState.voiceCall?.outgoing &&
 				!CallState.videoCall?.incoming &&
 				!CallState.voiceCall?.incoming && (
-					<div className="relative z-0 grid h-screen max-h-screen w-screen max-w-full grid-cols-main overflow-hidden bg-gradient-to-b from-[#f0f2f5] to-[#efeae2] dark:from-[#222e35] dark:to-[#0b141a] lg:p-5">
+					<div className="relative z-0 grid h-screen max-h-screen w-screen max-w-full overflow-hidden bg-gradient-to-b from-[#f0f2f5] to-[#efeae2] dark:from-[#222e35] dark:to-[#0b141a] lg:grid-cols-main lg:p-5">
 						{loading || !session ? (
 							<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
 								<Lottie animationData={animationData} loop={true} height={500} width={500} />
@@ -166,7 +166,7 @@ export default function Chat(): React.JSX.Element {
 						) : (
 							<>
 								<div className="absolute -z-10 flex h-[20vh] w-full bg-[#00a783] dark:bg-[#10745e] " />
-								<ChatList />
+								{!conversationId && <ChatList />}
 								{isTalking ? (
 									<div className={MessageSearch ? "grid grid-cols-2" : "grid-cols-2"}>
 										<ChatContainer conversation={conversation} messages={messages} />

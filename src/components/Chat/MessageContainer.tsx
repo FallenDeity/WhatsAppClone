@@ -32,30 +32,6 @@ export default function MessageContainer({
 		<div className="relative flex h-full w-full flex-col-reverse overflow-y-auto scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-700">
 			<div className="z-1 fixed left-0 top-0 h-full w-full bg-chat-background bg-fixed opacity-50 dark:opacity-5" />
 			<div className="relative bottom-0 left-0 z-40 px-2 py-6 lg:px-10">
-				{image && (
-					<div className="z-80 fixed left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/70">
-						<button
-							className="z-90 fixed right-8 top-6 text-5xl font-bold text-white"
-							onClick={(): void => setImage("")}>
-							&times;
-						</button>
-						<Image
-							src={image}
-							alt="image"
-							width={800}
-							height={600}
-							className="max-h-[600px] max-w-[800px] object-contain"
-						/>
-						<Link
-							href={image}
-							passHref
-							target="_blank"
-							rel="noopener noreferrer"
-							className="mt-1 text-neutral-500 transition-all duration-300 ease-in hover:text-blue-500">
-							open original
-						</Link>
-					</div>
-				)}
 				<div className="flex w-full">
 					<div className="flex w-full flex-col justify-end gap-2 overflow-auto">
 						{messages.map((message) => (
@@ -72,48 +48,79 @@ export default function MessageContainer({
 												: "mx-6 bg-[#ffffff] dark:bg-[#202c33]"
 										}`}>
 										<div className="relative">
+											{image && (
+												<div className="z-90 fixed left-0 top-0 flex h-screen w-screen flex-col items-center justify-center bg-black/70">
+													<button
+														className="fixed right-8 top-6 text-5xl font-bold text-white"
+														onClick={(): void => setImage("")}>
+														&times;
+													</button>
+													<Image
+														src={image}
+														alt="image"
+														width={800}
+														height={600}
+														className="max-h-[600px] max-w-[300px] object-contain sm:max-w-[400px] md:max-w-[800px]"
+													/>
+													<Link
+														href={image}
+														passHref
+														target="_blank"
+														rel="noopener noreferrer"
+														className="mt-1 text-neutral-500 transition-all duration-300 ease-in hover:text-blue-500">
+														open original
+													</Link>
+												</div>
+											)}
 											<Image
 												onClick={(): void => {
 													setImage(message.image);
 												}}
 												src={message.image}
 												alt={message.sender.name ?? ""}
-												width={200}
-												height={200}
-												className="h-full max-h-[600px] w-full max-w-[400px] rounded-lg object-contain"
+												width={600}
+												height={600}
+												className="h-full max-h-[600px] w-full max-w-[400px] rounded-lg object-contain lg:max-h-[800px] lg:max-w-[600px]"
 											/>
-											<div className="absolute bottom-1 right-1 flex flex-row items-end gap-1">
-												<span className="min-w-fit pt-2 text-[10px] font-light">
-													{formatMessageDate(message.createdAt)}
-												</span>
-												{message.sender.email === email &&
-													(message.seenIds.length === users.length ? (
-														<BsCheck2All className="text-blue-500" />
-													) : (
-														<BsCheck2 className="text-gray-500" />
-													))}
-											</div>
+											{!image && (
+												<div className="absolute bottom-1 right-1 flex flex-row items-end gap-1">
+													<span className="min-w-fit pt-2 text-[10px] font-light">
+														{formatMessageDate(message.createdAt)}
+													</span>
+													{message.sender.email === email &&
+														(message.seenIds.length === users.length ? (
+															<BsCheck2All className="h-3 w-3 text-blue-500" />
+														) : (
+															<BsCheck2 className="h-3 w-3 text-gray-500" />
+														))}
+												</div>
+											)}
 										</div>
 									</div>
 								)}
 								{message.audio && <VoiceMessage users={users} email={email} message={message} />}
 								{message.body && (
 									<div
-										className={`flex max-w-[90%] items-center gap-2 rounded-md px-2 py-[3px] text-sm text-[#111b21] dark:text-[#daedef] sm:max-w-[70%] md:max-w-[45%] ${
+										className={`flex min-w-[75px] max-w-[90%] flex-col rounded-md px-2 pt-1 text-sm text-[#111b21] dark:text-[#daedef] sm:max-w-[70%] md:max-w-[50%] ${
 											message.sender.email === email
 												? "bg-[#d9fdd3] dark:bg-[#005c4b]"
 												: "mx-6 bg-[#ffffff] dark:bg-[#202c33]"
 										}`}>
-										<span className="mx-1 break-all">{message.body}</span>
-										<div className="flex flex-row items-end gap-1">
-											<span className="min-w-fit pt-2 text-[10px] font-light">
+										<span
+											className={`mx-1 break-all ${
+												message.sender.email === email ? "text-end" : "text-start"
+											}`}>
+											{message.body}
+										</span>
+										<div className="flex w-full flex-row items-center gap-1 px-1">
+											<span className="w-full text-end text-[9px] font-light">
 												{formatMessageDate(message.createdAt)}
 											</span>
 											{message.sender.email === email &&
 												(message.seenIds.length === users.length ? (
-													<BsCheck2All className="text-blue-500" />
+													<BsCheck2All className="h-3 w-3 text-blue-500" />
 												) : (
-													<BsCheck2 className="text-gray-500" />
+													<BsCheck2 className="h-3 w-3 text-gray-500" />
 												))}
 										</div>
 									</div>

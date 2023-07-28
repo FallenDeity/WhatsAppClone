@@ -60,7 +60,10 @@ export default function ChatListItem({
 		if (!conversation.messages) {
 			return 0;
 		}
-		if (conversation.messages[conversation.messages.length - 1]?.seen?.length === conversation.users.length) {
+		if (
+			conversation.messages[conversation.messages.length - 1]?.seen?.length === conversation.users.length ||
+			hasSeen
+		) {
 			return 0;
 		}
 		const unseen = conversation.messages.filter(
@@ -100,7 +103,7 @@ export default function ChatListItem({
 						<span className="text-md font-semibold text-[#1d2129] dark:text-[#e4e6eb]">
 							{conversation.name || conversation.users.filter((user) => user.email !== email)[0]?.name}
 							<span
-								className={`mt-1 line-clamp-1 text-xs ${
+								className={`mt-1 line-clamp-1 text-xs lg:w-36 xl:w-48 ${
 									// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 									hasSeen
 										? "font-normal text-[#54656f] dark:text-[#aebac1]"
@@ -112,10 +115,10 @@ export default function ChatListItem({
 					</div>
 					{lastMessage?.createdAt && (
 						<div className="flex flex-col items-end justify-center space-y-2">
-							<span className="text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
+							<span className="text-right text-xs font-normal text-[#54656f] dark:text-[#aebac1]">
 								{formatMessageDate(lastMessage.createdAt)}
 							</span>
-							{unseenMessages > 0 && (
+							{unseenMessages > 0 && conversation.id !== conversationId && !hasSeen && (
 								<span className="flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-green-600 text-[8px] text-white">
 									{unseenMessages}
 								</span>

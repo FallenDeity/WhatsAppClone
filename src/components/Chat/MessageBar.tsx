@@ -40,6 +40,7 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 				setText("");
 				setLoading(false);
 			});
+		// setText("");
 	};
 	const handleUpload = (result: { info: { secure_url: string } }): void => {
 		if (loading) return;
@@ -59,6 +60,20 @@ export default function MessageBar({ id }: { id: string }): React.JSX.Element {
 	const handleEmojiClick = (emoji: EmojiClickData): void => {
 		setText((prev) => prev + emoji.emoji);
 	};
+	React.useEffect(() => {
+		const handleKeyPress = (e: KeyboardEvent): void => {
+			if (loading) return;
+			if (e.key) {
+				if (textRef.current) {
+					textRef.current.focus();
+				}
+			}
+		};
+		window.addEventListener("keypress", handleKeyPress);
+		return () => {
+			window.removeEventListener("keypress", handleKeyPress);
+		};
+	}, []);
 	return (
 		<div className="relative flex w-full items-center gap-6 border-b-4 border-b-[#25d366] bg-[#f0f2f5] px-4 py-2 dark:border-b-[#00a884] dark:bg-[#222e35]">
 			{!showAudioRecorder && (

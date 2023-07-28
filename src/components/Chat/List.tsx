@@ -5,17 +5,17 @@ import { useSession } from "next-auth/react";
 import React, { useMemo } from "react";
 import { BiFilter } from "react-icons/bi";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { useRecoilState } from "recoil";
 
-// import { useRecoilState } from "recoil";
 import { UserSession } from "@/lib/model";
 import { pusherClient } from "@/lib/pusher";
 import { FullConversationType } from "@/lib/types";
 
-// import { conversationState } from "../atoms/conversationState";
+import { conversationState } from "../atoms/conversationState";
 import ChatListItem from "./ChatListItem";
 
 export default function List({ conversation }: { conversation: FullConversationType[] }): React.JSX.Element {
-	// const conversationId = useRecoilState(conversationState)[0];
+	const conversationId = useRecoilState(conversationState)[0];
 	const { data: session } = useSession() as { data: UserSession | undefined };
 	const [conversations, setConversations] = React.useState<FullConversationType[]>(conversation);
 	const searchRef = React.useRef<HTMLInputElement>(null);
@@ -35,7 +35,7 @@ export default function List({ conversation }: { conversation: FullConversationT
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-						return { ...conversation, messages: [...conversation?.messages, ...data.messages] };
+						return { ...conversation, messages: [...conversation?.messages, ...data?.messages] };
 					}
 					return conversation;
 				})
@@ -55,7 +55,7 @@ export default function List({ conversation }: { conversation: FullConversationT
 			pusherClient.unbind("conversation:update", updateHandler);
 			pusherClient.unbind("conversation:remove", deleteHandler);
 		};
-	}, [pusherKey]);
+	}, [pusherKey, conversationId]);
 	const handleSearch = (): void => {
 		if (!searchRef.current) return;
 		const value = searchRef.current.value;

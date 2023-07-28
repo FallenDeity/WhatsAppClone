@@ -88,7 +88,7 @@ export default function VoiceMessage({
 	}, [message.audio, waveForm]);
 	return (
 		<div
-			className={`flex items-center gap-5 rounded-lg px-4 py-3 text-sm text-[#111b21] dark:text-[#daedef] ${
+			className={`flex items-center justify-center gap-5 rounded-lg px-4 py-2 text-sm text-[#111b21] dark:text-[#daedef] ${
 				message.sender.email === email
 					? "bg-[#d9fdd3] dark:bg-[#005c4b]"
 					: "mx-6 bg-[#ffffff] dark:bg-[#202c33]"
@@ -101,7 +101,7 @@ export default function VoiceMessage({
 			<div className="relative">
 				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 				{/* @ts-expect-error */}
-				<div className="w-48 lg:w-60" ref={waveFormRef} />
+				<div className="mb-1 w-48 lg:w-60" ref={waveFormRef} />
 				{audio && isPlaying && (
 					<span className="text-xs text-[#54656f] dark:text-[#aebac1]">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}
@@ -112,15 +112,13 @@ export default function VoiceMessage({
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}
 					</span>
 				)}
-				<div className="absolute bottom-0 right-0 flex flex-row items-end gap-1">
-					<span className="min-w-fit pt-2 text-[10px] font-light">
-						{formatMessageDate(message.createdAt)}
-					</span>
+				<div className="absolute bottom-0 right-0 flex flex-row items-end justify-end gap-1">
+					<span className="min-w-fit text-[10px] font-light">{formatMessageDate(message.createdAt)}</span>
 					{message.sender.email === email &&
 						(message.seenIds.length === users.length ? (
-							<BsCheck2All className="text-blue-500" />
+							<BsCheck2All className="h-3 w-3 text-blue-500" />
 						) : (
-							<BsCheck2 className="text-gray-500" />
+							<BsCheck2 className="h-3 w-3 text-gray-500" />
 						))}
 				</div>
 			</div>

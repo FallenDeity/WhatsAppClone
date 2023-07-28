@@ -2,11 +2,12 @@
 
 import { User } from "@prisma/client";
 import axios from "axios";
-// import Image from "next/image";
+import Image from "next/image";
 import React from "react";
-// import Avatar from "react-avatar";
+import Avatar from "react-avatar";
 import { MdCall, MdCallEnd } from "react-icons/md";
 import { BeatLoader } from "react-spinners";
+import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { ZegoExpressEngine } from "zego-express-engine-webrtc";
 import { ZegoStreamList } from "zego-express-engine-webrtc/sdk/code/zh/ZegoExpressEntity.web";
@@ -31,10 +32,13 @@ export default function IncomingCall({
 	const [streamID, setStreamID] = React.useState("");
 	const [localStream, setLocalStream] = React.useState<MediaStream | null>(null);
 	const [remoteStream, setRemoteStream] = React.useState<MediaStream | null>(null);
-	// const [audio, setAudio] = React.useState<HTMLAudioElement | null>(null);
+	const [duration, setDuration] = React.useState(0);
+	const [incomingLoading, setIncomingLoading] = React.useState(false);
+	const [endingLoading, setEndingLoading] = React.useState(false);
 	React.useEffect(() => {
 		pusherClient.subscribe(email);
 		pusherClient.bind("call:cancelled", () => {
+			toast.error("Call ended");
 			setCallState({});
 			zg?.stopPlayingStream(streamID);
 			zg?.stopPublishingStream(streamID);
@@ -48,20 +52,29 @@ export default function IncomingCall({
 			pusherClient.unbind("call:cancelled");
 		};
 	}, []);
-	/*
 	React.useEffect(() => {
+		const playRingtone = (): HTMLAudioElement => {
+			const audioElement = new Audio("/call-sound.mp3");
+			audioElement.loop = true;
+			void audioElement.play();
+			return audioElement;
+		};
+
+		const stopRingtone = (audioElement: HTMLAudioElement): void => {
+			audioElement.pause();
+			audioElement.currentTime = 0;
+		};
+
+		let audioElement: HTMLAudioElement | undefined;
 		if (!callAccepted) {
-			console.log("playing audio");
-			const audio = new Audio("/call-sound.mp3");
-			audio.loop = true;
-			void audio.play();
-			setAudio(audio);
+			audioElement = playRingtone();
 		} else {
-			audio?.pause();
-			setAudio(null);
+			if (audioElement) stopRingtone(audioElement);
 		}
+		return () => {
+			if (audioElement) stopRingtone(audioElement);
+		};
 	}, [callAccepted]);
-	*/
 	React.useEffect((): void => {
 		if (callAccepted) {
 			const _zg = new ZegoExpressEngine(
@@ -108,46 +121,72 @@ export default function IncomingCall({
 				});
 		}
 	}, [callAccepted]);
+	React.useEffect(() => {
+		if (callAccepted) {
+			const interval = setInterval(() => {
+				setDuration((duration) => duration + 1);
+			}, 1000);
+			return () => clearInterval(interval);
+		}
+		return;
+	}, [callAccepted]);
+	const formatTime = (time: number): string => {
+		if (isNaN(time) || time === Infinity) return "00:00";
+		const minutes = Math.floor(time / 60);
+		const seconds = Math.floor(time % 60);
+		return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+	};
 	return (
 		<div className="z-20 flex h-[100vh] max-h-screen w-full items-center justify-center overflow-hidden border border-[#e9edef] bg-[#efeae2] text-[#54656f] dark:border-[#313d45] dark:bg-[#0b141a] dark:text-[#aebac1] lg:h-[95vh] lg:rounded-lg">
 			<div className="flex flex-col items-center justify-center space-y-10">
-				<span className="my-3 text-sm text-opacity-30">
-					{call.type === "video" ? "Video Call" : "Voice Call"}
-				</span>
-				{/*
-				{!callAccepted &&
-					call.type === "video" &&
-					(call.user?.image ? (
-						<Image
-							src={call.user.image}
-							alt={call.user.name ?? ""}
-							className="rounded-full"
-							height={200}
-							width={200}
-						/>
-					) : (
-						<Avatar name={call.user?.name ?? ""} className="rounded-full" size="200" textSizeRatio={2} />
-					))}
-					*/}
-				<div className="video-wrapper">
-					<div id="local-video"></div>
-					<div id="local-audio" className="hidden"></div>
-					<div id="remote-video"></div>
+				{!callAccepted && (
+					<span className="my-3 text-sm text-opacity-30">
+						{call.type === "video" ? "Video Call" : "Voice Call"}
+					</span>
+				)}
+				<div className={`${callAccepted && call.type === "video" ? "hidden" : ""}`}>
+					{(!callAccepted || call.type === "voice") &&
+						(call.user?.image ? (
+							<Image
+								src={call.user.image}
+								alt={call.user.name ?? ""}
+								className="rounded-full"
+								height={200}
+								width={200}
+							/>
+						) : (
+							<Avatar
+								name={call.user?.name ?? ""}
+								className="rounded-full"
+								size="200"
+								textSizeRatio={2}
+							/>
+						))}
 				</div>
 				<span className="mt-5 text-5xl font-semibold">{call.user?.name}</span>
 				{callAccepted ? (
-					<span className="mt-5 text-xl font-semibold">Ongoing Call</span>
+					<div className="flex flex-row items-center justify-center space-x-3">
+						<div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
+						<span className="text-md">{formatTime(duration)}</span>
+					</div>
 				) : (
 					<span className="mt-5 text-xl font-semibold">
 						<BeatLoader color="#54656f" />
 					</span>
 				)}
+				<div className={`video-wrapper ${callAccepted && call.type === "video" ? "" : "hidden"}`}>
+					<div id="local-video" />
+					<div id="local-audio" className="hidden" />
+					<div id="remote-video" />
+				</div>
 				<div className="flex flex-row space-x-5">
 					{!callAccepted && (
-						<MdCall
-							className="mt-5 h-[56px] w-[56px] cursor-pointer rounded-full bg-green-500 p-3 text-white"
+						<button
+							disabled={incomingLoading || endingLoading}
+							className="mt-5 flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full bg-green-500 p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
 							onClick={(): void => {
-								if (callAccepted) return;
+								if (incomingLoading) return;
+								setIncomingLoading(true);
 								void axios
 									.post("/api/call/accepted", {
 										id: call.roomID,
@@ -156,15 +195,19 @@ export default function IncomingCall({
 									})
 									.then(() => {
 										setCallAccepted(true);
+										setIncomingLoading(false);
 										// audio?.pause();
 										// setAudio(null);
 									});
-							}}
-						/>
+							}}>
+							<MdCall className="h-6 w-6" />
+						</button>
 					)}
-					<MdCallEnd
-						className="mt-5 h-[56px] w-[56px] cursor-pointer rounded-full bg-red-500 p-3 text-white"
+					<button
+						className="mt-5 flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full bg-red-500 p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
 						onClick={(): void => {
+							if (endingLoading) return;
+							setEndingLoading(true);
 							void axios
 								.post("/api/call/accepted", {
 									id: call.roomID,
@@ -179,11 +222,15 @@ export default function IncomingCall({
 									if (localStream) zg?.destroyStream(localStream);
 									zg?.logoutRoom(String(call.roomID));
 									zg?.destroyEngine();
+									setCallAccepted(false);
+									setEndingLoading(false);
 									// audio?.pause();
 									// setAudio(null);
 								});
 						}}
-					/>
+						disabled={endingLoading || incomingLoading}>
+						<MdCallEnd className="h-6 w-6" />
+					</button>
 				</div>
 			</div>
 		</div>

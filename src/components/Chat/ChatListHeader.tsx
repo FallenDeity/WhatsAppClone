@@ -109,11 +109,6 @@ export default function ChatListHeader(): React.JSX.Element {
 				.catch((err) => {
 					toast.error("File has to be less than 10MB");
 					console.log(err);
-				})
-				.finally(() => {
-					setGroupModalOpen(false);
-					setGroupLoading(false);
-					setGroupSelectedFile(null);
 				});
 		} else {
 			void axios
@@ -175,11 +170,6 @@ export default function ChatListHeader(): React.JSX.Element {
 				.catch((err) => {
 					toast.error("File has to be less than 10MB");
 					console.log(err);
-				})
-				.finally(() => {
-					setModalOpen(false);
-					setLoading(false);
-					setSelectedFile(null);
 				});
 		} else {
 			void axios
@@ -338,7 +328,7 @@ export default function ChatListHeader(): React.JSX.Element {
 										alt="Profile"
 										width={100}
 										height={100}
-										className="h-[180px] w-[180px] cursor-pointer rounded-full object-cover"
+										className="h-[180px] w-[180px] cursor-pointer rounded-full border object-cover"
 									/>
 								</div>
 							)}
@@ -393,7 +383,7 @@ export default function ChatListHeader(): React.JSX.Element {
 										alt="Logo"
 										width={100}
 										height={100}
-										className="h-[180px] w-[180px] cursor-pointer rounded-full object-cover"
+										className="h-[180px] w-[180px] cursor-pointer rounded-full border object-cover"
 									/>
 								</div>
 							)}

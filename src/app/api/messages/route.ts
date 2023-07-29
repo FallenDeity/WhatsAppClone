@@ -121,13 +121,13 @@ export async function POST(request: Request): Promise<NextResponse> {
 				},
 			},
 		});
-		await pusherServer.trigger(conversationId, "messages:new", newMessage);
 		updateConversation.users.map(async (user): Promise<void> => {
 			await pusherServer.trigger(String(user.email), "conversation:update", {
 				id: conversationId,
 				messages: [newMessage],
 			});
 		});
+		await pusherServer.trigger(conversationId, "messages:new", newMessage);
 		return NextResponse.json(newMessage);
 	} catch (error) {
 		console.log(error, "ERROR_MESSAGES");

@@ -4,7 +4,6 @@
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 import Avatar from "react-avatar";
 import { BiTrash } from "react-icons/bi";
@@ -49,7 +48,6 @@ export default function ChatHeader({
 	email: string;
 }): React.JSX.Element {
 	const { members } = useActiveList();
-	const router = useRouter();
 	const otherUser = React.useMemo(() => {
 		if (!conversation) {
 			return null;
@@ -71,7 +69,6 @@ export default function ChatHeader({
 				setConversationState("");
 				setModalOpen(false);
 				setLoading(false);
-				router.replace("/chat");
 			})
 			.finally(() => {
 				setModalOpen(false);

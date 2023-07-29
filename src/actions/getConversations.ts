@@ -26,16 +26,53 @@ const getConversations = async (): Promise<FullConversationType[]> => {
 				},
 			},
 			include: {
-				users: true,
+				users: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 				messages: {
 					include: {
-						sender: true,
-						seen: true,
+						sender: {
+							select: {
+								id: true,
+								email: true,
+								image: true,
+								name: true,
+								createdAt: true,
+								updatedAt: true,
+								lastSeen: true,
+								conversationIds: false,
+								seenMessageIds: false,
+							},
+						},
+						seen: {
+							select: {
+								id: true,
+								email: true,
+								image: true,
+								name: true,
+								createdAt: true,
+								updatedAt: true,
+								lastSeen: true,
+								conversationIds: false,
+								seenMessageIds: false,
+							},
+						},
 					},
 				},
 			},
 		});
-
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		return conversations;
 	} catch (error) {
 		console.log(error, "CONVERSATIONS_FETCH_ERROR");

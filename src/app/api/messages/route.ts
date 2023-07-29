@@ -19,8 +19,32 @@ export async function POST(request: Request): Promise<NextResponse> {
 		}
 		const newMessage = await prisma.message.create({
 			include: {
-				seen: true,
-				sender: true,
+				seen: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
+				sender: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 			},
 			data: {
 				body: message,
@@ -52,11 +76,47 @@ export async function POST(request: Request): Promise<NextResponse> {
 				},
 			},
 			include: {
-				users: true,
+				users: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 				messages: {
 					include: {
-						sender: true,
-						seen: true,
+						sender: {
+							select: {
+								id: true,
+								email: true,
+								image: true,
+								name: true,
+								createdAt: true,
+								updatedAt: true,
+								lastSeen: true,
+								conversationIds: false,
+								seenMessageIds: false,
+							},
+						},
+						seen: {
+							select: {
+								id: true,
+								email: true,
+								image: true,
+								name: true,
+								createdAt: true,
+								updatedAt: true,
+								lastSeen: true,
+								conversationIds: false,
+								seenMessageIds: false,
+							},
+						},
 					},
 				},
 			},

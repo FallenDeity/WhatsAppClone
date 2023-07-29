@@ -26,7 +26,19 @@ export async function DELETE(_: Request, { params }: { params: IParams }): Promi
 				id: conversationId,
 			},
 			include: {
-				users: true,
+				users: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 			},
 		});
 

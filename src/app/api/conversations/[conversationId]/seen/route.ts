@@ -27,10 +27,34 @@ export async function POST(_: Request, { params }: { params: IParams }): Promise
 			include: {
 				messages: {
 					include: {
-						seen: true,
+						seen: {
+							select: {
+								id: true,
+								email: true,
+								image: true,
+								name: true,
+								createdAt: true,
+								updatedAt: true,
+								lastSeen: true,
+								conversationIds: false,
+								seenMessageIds: false,
+							},
+						},
 					},
 				},
-				users: true,
+				users: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 			},
 		});
 		if (!conversation) {
@@ -71,8 +95,32 @@ export async function POST(_: Request, { params }: { params: IParams }): Promise
 				},
 			},
 			include: {
-				sender: true,
-				seen: true,
+				sender: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
+				seen: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 			},
 		});
 		for (const message of updatedMessages) {

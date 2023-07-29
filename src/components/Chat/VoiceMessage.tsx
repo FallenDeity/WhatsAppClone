@@ -116,9 +116,9 @@ export default function VoiceMessage({
 					<span className="min-w-fit text-[10px] font-light">{formatMessageDate(message.createdAt)}</span>
 					{message.sender.email === email &&
 						(message.seenIds.length === users.length ? (
-							<BsCheck2All className="h-3 w-3 text-blue-500" />
+							<BsCheck2All className="h-4 w-4 text-blue-500" />
 						) : (
-							<BsCheck2 className="h-3 w-3 text-gray-500" />
+							<BsCheck2 className="h-4 w-4 text-gray-500" />
 						))}
 				</div>
 			</div>

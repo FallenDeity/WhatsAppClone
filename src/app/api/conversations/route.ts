@@ -37,7 +37,19 @@ export async function POST(request: Request): Promise<NextResponse> {
 					logo,
 				},
 				include: {
-					users: true,
+					users: {
+						select: {
+							id: true,
+							email: true,
+							image: true,
+							name: true,
+							createdAt: true,
+							updatedAt: true,
+							lastSeen: true,
+							conversationIds: false,
+							seenMessageIds: false,
+						},
+					},
 				},
 			});
 			newConversation.users.map(async (user): Promise<void> => {
@@ -80,7 +92,19 @@ export async function POST(request: Request): Promise<NextResponse> {
 				},
 			},
 			include: {
-				users: true,
+				users: {
+					select: {
+						id: true,
+						email: true,
+						image: true,
+						name: true,
+						createdAt: true,
+						updatedAt: true,
+						lastSeen: true,
+						conversationIds: false,
+						seenMessageIds: false,
+					},
+				},
 			},
 		});
 		newConversation.users.map(async (user): Promise<void> => {

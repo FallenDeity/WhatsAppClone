@@ -3,28 +3,28 @@
 
 import { find } from "lodash";
 import { useSession } from "next-auth/react";
-import React, { useMemo } from "react";
+import React from "react";
 import { BiFilter } from "react-icons/bi";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { useRecoilState } from "recoil";
 
+// import { useRecoilState } from "recoil";
 import { UserSession } from "@/lib/model";
 import { pusherClient } from "@/lib/pusher";
 import { FullConversationType } from "@/lib/types";
 
-import { conversationState } from "../atoms/conversationState";
+// import { conversationState } from "../atoms/conversationState";
 import ChatListItem from "./ChatListItem";
 
 export default function List({ conversation }: { conversation: FullConversationType[] }): React.JSX.Element {
-	const conversationId = useRecoilState(conversationState)[0];
+	// const conversationId = useRecoilState(conversationState)[0];
 	const { data: session } = useSession() as { data: UserSession | undefined };
 	const [conversations, setConversations] = React.useState<FullConversationType[]>(conversation);
 	const searchRef = React.useRef<HTMLInputElement>(null);
 	const [searchResults, setSearchResults] = React.useState<FullConversationType[]>([]);
-	const pusherKey = useMemo(() => session?.user?.email, [session?.user?.email]);
+	// const pusherKey = React.useMemo(() => session?.user?.email, [session?.user?.email]);
 	React.useEffect(() => {
-		if (!pusherKey) return;
-		pusherClient.subscribe(pusherKey);
+		if (!session?.user?.email) return;
+		pusherClient.subscribe(session?.user?.email);
 		const newHandler = (data: FullConversationType): void => {
 			setConversations((prev) => {
 				if (find(prev, { id: data.id })) return prev;
@@ -66,12 +66,13 @@ export default function List({ conversation }: { conversation: FullConversationT
 		pusherClient.bind("conversation:update", updateHandler);
 		pusherClient.bind("conversation:remove", deleteHandler);
 		return () => {
-			pusherClient.unsubscribe(pusherKey);
+			if (!session?.user?.email) return;
+			pusherClient.unsubscribe(session?.user?.email);
 			pusherClient.unbind("conversation:new", newHandler);
 			pusherClient.unbind("conversation:update", updateHandler);
 			pusherClient.unbind("conversation:remove", deleteHandler);
 		};
-	}, [pusherKey, conversationId]);
+	}, []);
 	const handleSearch = (): void => {
 		if (!searchRef.current) return;
 		const value = searchRef.current.value;

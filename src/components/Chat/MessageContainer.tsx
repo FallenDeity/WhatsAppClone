@@ -102,9 +102,9 @@ export default function MessageContainer({
 												}}
 												src={message.image}
 												alt={message.sender.name ?? ""}
-												width={600}
-												height={600}
-												className="h-full max-h-[600px] w-full max-w-[400px] rounded-lg object-contain lg:max-h-[800px] lg:max-w-[600px]"
+												width={500}
+												height={500}
+												className="h-full max-h-[250px] w-full cursor-pointer rounded-lg object-contain"
 											/>
 											{!image && (
 												<div className="absolute bottom-1 right-1 flex flex-row items-end gap-1">

@@ -53,8 +53,9 @@ export default function List({ conversation }: { conversation: FullConversationT
 			);
 			setConversations((prev) =>
 				prev.sort((a, b) => {
-					const aTime = new Date(a.lastMessageAt || a.createdAt);
-					const bTime = new Date(b.lastMessageAt || b.createdAt);
+					console.log(a, b);
+					const aTime = new Date(a?.lastMessageAt || a.createdAt);
+					const bTime = new Date(b?.lastMessageAt || b.createdAt);
 					return bTime.getTime() - aTime.getTime();
 				})
 			);

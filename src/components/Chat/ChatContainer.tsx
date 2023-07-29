@@ -35,7 +35,7 @@ export default function ChatContainer({
 						users={conversation.users}
 						id={conversation.id}
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-						messages={messages || []}
+						messages={messages?.length ? messages : []}
 						email={session?.user?.email ?? ""}
 					/>
 					<MessageBar id={conversation.id} />

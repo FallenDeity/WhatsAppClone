@@ -122,11 +122,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 			},
 		});
 		await pusherServer.trigger(conversationId, "messages:new", newMessage);
-		const lastMessage = updateConversation.messages[updateConversation.messages.length - 1];
 		updateConversation.users.map(async (user): Promise<void> => {
 			await pusherServer.trigger(String(user.email), "conversation:update", {
 				id: conversationId,
-				messages: [lastMessage],
+				messages: [newMessage],
 			});
 		});
 		return NextResponse.json(newMessage);

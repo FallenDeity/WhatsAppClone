@@ -31,7 +31,6 @@ export default function List({ conversation }: { conversation: FullConversationT
 			});
 		};
 		const updateHandler = (data: FullConversationType): void => {
-			console.log(data);
 			setConversations((prev) =>
 				prev.map((conversation) => {
 					if (conversation.id === data.id) {

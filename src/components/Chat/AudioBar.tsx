@@ -9,9 +9,12 @@ import { FaCirclePause, FaMicrophone, FaPause, FaPlay, FaTrash } from "react-ico
 import { MdSend } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
 import { toast, ToastContainer } from "react-toastify";
+import { useRecoilState } from "recoil";
 import WaveSurfer from "wavesurfer.js";
 
 import { getAudioUrl } from "@/actions/getAudioUrl";
+
+import { messageSearch } from "../atoms/messageSearch";
 
 export default function AudioBar({
 	conversationId,
@@ -20,6 +23,7 @@ export default function AudioBar({
 	conversationId: string;
 	hide: (arg: boolean) => void;
 }): React.JSX.Element {
+	const MessageSearch = useRecoilState(messageSearch)[0];
 	const { systemTheme, theme } = useTheme();
 	const currentTheme = theme === "system" ? systemTheme : theme;
 	const isDark = currentTheme === "dark";
@@ -207,9 +211,14 @@ export default function AudioBar({
 						)}
 					</div>
 				)}
-				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-				{/* @ts-expect-error */}
-				<div className="w-32 sm:w-48 lg:w-60" ref={waveFormRef} hidden={recording} />
+				<div
+					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+					className={`w-32 sm:w-48 lg:w-60 ${MessageSearch && "lg:w-32"}`}
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					ref={waveFormRef}
+					hidden={recording}
+				/>
 				{audio && isPlaying && (
 					<span className="hidden text-xs text-[#54656f] dark:text-[#aebac1] sm:flex">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}

@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 "use client";
 
 import { User } from "@prisma/client";
 import React from "react";
 import { BsCheck2, BsCheck2All } from "react-icons/bs";
 import { FaPause, FaPlay } from "react-icons/fa6";
+import { useRecoilState } from "recoil";
 import WaveSurfer from "wavesurfer.js";
 
 import { FullMessageType } from "@/lib/types";
 import { formatMessageDate } from "@/lib/utils";
+
+import { messageSearch } from "../atoms/messageSearch";
 
 export default function VoiceMessage({
 	message,
@@ -18,6 +22,7 @@ export default function VoiceMessage({
 	email: string;
 	users: User[];
 }): React.JSX.Element {
+	const MessageSearch = useRecoilState(messageSearch)[0];
 	const waveFormRef = React.useRef<HTMLElement | string>("");
 	const [waveForm, setWaveForm] = React.useState<WaveSurfer>();
 	const [audio, setAudio] = React.useState<HTMLAudioElement | null>(null);
@@ -99,9 +104,9 @@ export default function VoiceMessage({
 				<FaPlay className="h-5 w-5 cursor-pointer" onClick={handlePlayRecording} />
 			)}
 			<div className="relative">
-				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+				{/* eslint-disable-next-line  @typescript-eslint/ban-ts-comment */}
 				{/* @ts-expect-error */}
-				<div className="mb-1 w-48 lg:w-60" ref={waveFormRef} />
+				<div className={`mb-1 w-48 lg:w-60 ${MessageSearch && "lg:w-32"}`} ref={waveFormRef} />
 				{audio && isPlaying && (
 					<span className="text-xs text-[#54656f] dark:text-[#aebac1]">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}

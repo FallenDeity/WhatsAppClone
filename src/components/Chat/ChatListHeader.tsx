@@ -330,7 +330,7 @@ export default function ChatListHeader(): React.JSX.Element {
 								Make changes to your profile here. Click save when you're done.
 							</DialogDescription>
 						</DialogHeader>
-						<form ref={formRef} className="flex flex-col gap-4" onSubmit={handleSubmit}>
+						<form ref={formRef} className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
 							{selectedFile && (
 								<div className="flex justify-center">
 									<Image
@@ -342,7 +342,14 @@ export default function ChatListHeader(): React.JSX.Element {
 									/>
 								</div>
 							)}
-							<Input disabled={loading} id="username" placeholder="Name" className="col-span-3" />
+							<Input
+								disabled={loading}
+								id="username"
+								placeholder="Name"
+								className="col-span-3"
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+								onChange={(e): void => formRef.current?.setFieldValue("username", e.target.value)}
+							/>
 							<Textarea
 								disabled={loading}
 								id="about"
@@ -390,7 +397,14 @@ export default function ChatListHeader(): React.JSX.Element {
 									/>
 								</div>
 							)}
-							<Input disabled={groupLoading} id="groupname" placeholder="Name" className="col-span-3" />
+							<Input
+								disabled={groupLoading}
+								id="groupname"
+								placeholder="Name"
+								className="col-span-3"
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+								onChange={(e): void => groupFormRef.current?.setFieldValue("groupname", e.target.value)}
+							/>
 							<ReactSelect
 								isDisabled={groupLoading}
 								classNamePrefix="my-react-select"

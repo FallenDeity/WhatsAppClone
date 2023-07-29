@@ -38,14 +38,17 @@ export default function List({ conversation }: { conversation: FullConversationT
 						const dataTime = new Date(data.messages[data.messages.length - 1].createdAt);
 						const messages = conversation?.messages || [];
 						const messagesIds = conversation?.messagesIds || [];
+						let lastMessageAt = conversation?.lastMessageAt;
+						try {
+							lastMessageAt = lastMessageAt.getTime() > dataTime.getTime() ? lastMessageAt : dataTime;
+						} catch (error) {
+							lastMessageAt = dataTime;
+						}
 						return {
 							...conversation,
 							messages: [...messages, data.messages[data.messages.length - 1]],
 							messagesIds: [...messagesIds, data.messages[data.messages.length - 1].id],
-							lastMessageAt:
-								conversation.lastMessageAt.getTime() > dataTime.getTime()
-									? conversation.lastMessageAt
-									: dataTime,
+							lastMessageAt: lastMessageAt,
 						};
 					}
 					return conversation;
@@ -53,7 +56,6 @@ export default function List({ conversation }: { conversation: FullConversationT
 			);
 			setConversations((prev) =>
 				prev.sort((a, b) => {
-					console.log(a, b);
 					const aTime = new Date(a?.lastMessageAt || a.createdAt);
 					const bTime = new Date(b?.lastMessageAt || b.createdAt);
 					return bTime.getTime() - aTime.getTime();

@@ -213,18 +213,18 @@ export default function AudioBar({
 				)}
 				<div
 					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-					className={`w-32 sm:w-48 lg:w-60 ${MessageSearch && "lg:w-32"}`}
+					className={`w-32 sm:w-48 lg:w-60 ${MessageSearch && "lg:w-28"}`}
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error
 					ref={waveFormRef}
 					hidden={recording}
 				/>
-				{audio && isPlaying && (
+				{audio && isPlaying && !MessageSearch && (
 					<span className="hidden text-xs text-[#54656f] dark:text-[#aebac1] sm:flex">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}
 					</span>
 				)}
-				{audio && !isPlaying && !recording && (
+				{audio && !isPlaying && !recording && !MessageSearch && (
 					<span className="hidden text-xs text-[#54656f] dark:text-[#aebac1] sm:flex">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}
 					</span>

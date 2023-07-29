@@ -106,7 +106,7 @@ export default function VoiceMessage({
 			<div className="relative">
 				{/* eslint-disable-next-line  @typescript-eslint/ban-ts-comment */}
 				{/* @ts-expect-error */}
-				<div className={`mb-1 w-48 lg:w-60 ${MessageSearch && "lg:w-32"}`} ref={waveFormRef} />
+				<div className={`mb-1 w-48 lg:w-60 ${MessageSearch && "lg:w-28"}`} ref={waveFormRef} />
 				{audio && isPlaying && (
 					<span className="text-xs text-[#54656f] dark:text-[#aebac1]">
 						{formatTime(currentPlaybackTime)} / {formatTime(totalDuration)}

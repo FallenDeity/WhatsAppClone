@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client";
 
 import { find } from "lodash";
@@ -48,7 +49,13 @@ export default function List({ conversation }: { conversation: FullConversationT
 					return conversation;
 				})
 			);
-			setConversations((prev) => prev.sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime()));
+			setConversations((prev) =>
+				prev.sort((a, b) => {
+					const aTime = new Date(a.lastMessageAt || a.createdAt);
+					const bTime = new Date(b.lastMessageAt || b.createdAt);
+					return bTime.getTime() - aTime.getTime();
+				})
+			);
 		};
 		const deleteHandler = (data: FullConversationType): void => {
 			setConversations((prev) => {

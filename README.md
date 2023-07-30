@@ -13,7 +13,8 @@
 - [x] Supports text and image and voice messages.
 - [x] Search indexing for messages, chats and contacts.
 - [x] Dark and light mode available.
-- [x] Real time event and message notifications.      
+- [x] Real time event and message notifications.
+- [x] [Youtube Demo](https://youtu.be/xkknqfyUR-8)      
 
 # Demo
 

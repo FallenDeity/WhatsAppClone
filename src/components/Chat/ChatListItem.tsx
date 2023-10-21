@@ -77,7 +77,7 @@ export default function ChatListItem({
 				setconversationId(conversation.id);
 			}}
 			key={conversation.id}
-			className={`flex h-[70px] w-full cursor-pointer flex-row items-center justify-between px-4 transition-all duration-300 ease-in-out hover:bg-[#f0f2f5] dark:hover:bg-[#222e35] ${
+			className={`flex h-[70px] w-full cursor-pointer flex-row items-center justify-between border-y px-4 py-2.5 transition-all duration-300 ease-in-out hover:bg-[#f0f2f5] dark:hover:bg-[#222e35] ${
 				conversationId === conversation.id ? "bg-[#f0f2f5] dark:bg-[#222e35]" : ""
 			}`}>
 			<div className="flex h-full w-full items-center space-x-4">
@@ -95,10 +95,10 @@ export default function ChatListItem({
 					<Avatar
 						name={conversation.users.filter((user) => user.email !== email)[0]?.name ?? ""}
 						size="40"
-						className="h-12 w-12 cursor-pointer rounded-full object-contain p-0"
+						className="h-15 w-15 cursor-pointer rounded-full object-contain p-0"
 					/>
 				)}
-				<div className="flex h-full w-full flex-row justify-between border-y">
+				<div className="flex h-full w-full flex-row justify-between">
 					<div className="flex h-full flex-col justify-center">
 						<span className="text-md font-semibold text-[#1d2129] dark:text-[#e4e6eb]">
 							{conversation.name || conversation.users.filter((user) => user.email !== email)[0]?.name}

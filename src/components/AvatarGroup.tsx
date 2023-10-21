@@ -12,7 +12,7 @@ interface AvatarGroupProps {
 const AvatarGroup: React.FC<AvatarGroupProps> = ({ conversation, users = [] }) => {
 	const slicedUsers = users.slice(0, 3);
 	const positionMap = {
-		0: "top-0 left-[12px]",
+		0: "top-0 left-[10px]",
 		1: "bottom-0",
 		2: "bottom-0 right-0",
 	};
@@ -41,9 +41,9 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({ conversation, users = [] }) =
             ${positionMap[index as keyof typeof positionMap]}
           `}>
 							{user.image ? (
-								<Image fill src={user.image || "/user.png"} alt="Avatar" />
+								<Image fill src={user.image || "/user.png"} alt="Avatar" className="h-full w-full" />
 							) : (
-								<Avatar name={user.name ?? ""} size="100%" round={true} className="p-0" />
+								<Avatar name={user.name ?? ""} size="100%" round={true} className="h-full w-full" />
 							)}
 						</div>
 					))}
